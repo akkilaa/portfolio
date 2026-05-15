@@ -1,20 +1,22 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "db:migrate": "turbo db:migrate",
+    "db:generate": "turbo db:generate"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "^11.1.2",
-      "onFail": "download"
-    }
+  "devDependencies": {
+    "turbo": "^2.9.12"
   },
-  "type": "module"
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.0.0"
 }
