@@ -12,6 +12,7 @@
     "db:generate": "turbo db:generate"
   },
   "devDependencies": {
+    "@types/node": "^25.8.0",
     "turbo": "^2.9.12"
   },
   "engines": {

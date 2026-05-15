@@ -2,7 +2,7 @@
 
 The persistent shape of the system. Every entity, field, and relationship.
 
-The source of truth is `packages/db/prisma/schema.prisma`. This doc is the human-readable narrative — they must stay in sync.
+The source of truth is `packages/db/prisma/schema/` (multi-file, one file per entity). This doc is the human-readable narrative — they must stay in sync.
 
 ---
 

@@ -1,0 +1,38 @@
+enum RecommendationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("recommendation_status")
+}
+
+model RecommendationAuthor {
+  id          String   @id @default(uuid()) @db.Uuid
+  provider    String
+  providerId  String   @map("provider_id")
+  displayName String   @map("display_name")
+  username    String?
+  avatarUrl   String?  @map("avatar_url")
+  profileUrl  String   @map("profile_url")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  recommendation Recommendation?
+
+  @@unique([provider, providerId])
+  @@map("recommendation_authors")
+}
+
+model Recommendation {
+  id       String               @id @default(uuid()) @db.Uuid
+  authorId String               @unique @map("author_id") @db.Uuid
+  comment  String
+  status   RecommendationStatus @default(PENDING)
+  createdAt DateTime            @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime            @updatedAt @map("updated_at") @db.Timestamptz
+
+  author RecommendationAuthor @relation(fields: [authorId], references: [id])
+
+  @@index([status, createdAt(sort: Desc)])
+  @@map("recommendations")
+}

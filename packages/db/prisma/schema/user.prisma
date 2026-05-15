@@ -1,0 +1,21 @@
+enum Role {
+  ADMIN
+
+  @@map("role")
+}
+
+model User {
+  id             String    @id @default(uuid()) @db.Uuid
+  email          String    @unique @db.Citext
+  passwordHash   String    @map("password_hash")
+  role           Role      @default(ADMIN)
+  failedAttempts Int       @default(0) @map("failed_attempts")
+  lockedUntil    DateTime? @map("locked_until") @db.Timestamptz
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+
+  posts     Post[]
+  auditLogs AuditLog[]
+
+  @@map("users")
+}

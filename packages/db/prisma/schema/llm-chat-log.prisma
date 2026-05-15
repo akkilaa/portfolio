@@ -1,0 +1,15 @@
+model LlmChatLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  sessionId    String   @map("session_id") @db.Uuid
+  prompt       String
+  responseText String?  @map("response_text")
+  durationMs   Int?     @map("duration_ms")
+  model        String
+  ip           String?  @db.Inet
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@index([sessionId])
+  @@index([createdAt(sort: Desc)])
+  @@index([ip])
+  @@map("llm_chat_logs")
+}

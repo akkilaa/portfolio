@@ -1,0 +1,20 @@
+model Post {
+  id             String    @id @default(uuid()) @db.Uuid
+  slug           String    @unique
+  title          String
+  excerpt        String
+  contentMd      String    @map("content_md")
+  coverImage     String?   @map("cover_image")
+  readingMinutes Int       @default(1) @map("reading_minutes")
+  publishedAt    DateTime? @map("published_at") @db.Timestamptz
+  authorId       String    @map("author_id") @db.Uuid
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz
+
+  author   User      @relation(fields: [authorId], references: [id])
+  postTags PostTag[]
+
+  @@index([publishedAt(sort: Desc)])
+  @@map("posts")
+}
