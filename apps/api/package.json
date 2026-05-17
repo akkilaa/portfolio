@@ -10,6 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "@portfolio/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.8.0"
   }
 }
