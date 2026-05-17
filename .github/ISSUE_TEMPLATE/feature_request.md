@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: A new capability or improvement
-title: "feat: <short summary>"
+title: 'feat: <short summary>'
 labels: feature
 ---
 

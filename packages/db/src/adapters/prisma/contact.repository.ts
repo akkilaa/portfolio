@@ -1,6 +1,11 @@
 import type { PrismaClient } from '@prisma'
 import type { IContactRepository } from '@db/ports/repositories/contact.repository'
-import type { ContactSubmission, CreateContactInput, Paginated, PaginationOpts } from '@portfolio/shared'
+import type {
+  ContactSubmission,
+  CreateContactInput,
+  Paginated,
+  PaginationOpts,
+} from '@portfolio/shared'
 
 export class PrismaContactRepository implements IContactRepository {
   constructor(private readonly db: PrismaClient) {}

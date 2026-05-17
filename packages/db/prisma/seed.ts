@@ -1,4 +1,4 @@
-import "dotenv-expand/config";
+import 'dotenv-expand/config'
 import 'dotenv/config'
 import { prisma } from '@db'
 
@@ -6,24 +6,23 @@ if (process.env.NODE_ENV === 'production') {
   throw new Error('Seed must not run in production')
 }
 
-
 async function main() {
   // Tags
   const tags = await Promise.all(
     [
-      { slug: 'react',      label: 'React',      color: '#61DAFB' },
-      { slug: 'typescript', label: 'TypeScript',  color: '#3178C6' },
-      { slug: 'node',       label: 'Node.js',     color: '#339933' },
-      { slug: 'postgres',   label: 'PostgreSQL',  color: '#4169E1' },
-      { slug: 'nextjs',     label: 'Next.js',     color: '#000000' },
-      { slug: 'tailwind',   label: 'Tailwind CSS',color: '#06B6D4' },
+      { slug: 'react', label: 'React', color: '#61DAFB' },
+      { slug: 'typescript', label: 'TypeScript', color: '#3178C6' },
+      { slug: 'node', label: 'Node.js', color: '#339933' },
+      { slug: 'postgres', label: 'PostgreSQL', color: '#4169E1' },
+      { slug: 'nextjs', label: 'Next.js', color: '#000000' },
+      { slug: 'tailwind', label: 'Tailwind CSS', color: '#06B6D4' },
     ].map((tag) =>
       prisma.tag.upsert({
         where: { slug: tag.slug },
         update: {},
         create: tag,
-      })
-    )
+      }),
+    ),
   )
 
   console.log(`Seeded ${tags.length} tags`)
@@ -89,5 +88,8 @@ async function main() {
 }
 
 main()
-  .catch((e) => { console.error(e); process.exit(1) })
+  .catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
   .finally(() => prisma.$disconnect())

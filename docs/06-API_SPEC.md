@@ -20,23 +20,23 @@ This doc is human-readable. The machine-readable contract lives as Zod schemas i
   "error": {
     "code": "VALIDATION_FAILED",
     "message": "Human-readable summary.",
-    "fields": { "email": "Must be a valid email." }
-  }
+    "fields": { "email": "Must be a valid email." },
+  },
 }
 ```
 
-| HTTP status | When |
-|---|---|
-| 200 | OK with body |
-| 201 | Created |
-| 204 | OK no body |
-| 400 | Validation failed |
-| 401 | Not authenticated |
-| 403 | Authenticated but not allowed |
-| 404 | Not found |
-| 409 | Conflict (e.g. duplicate slug) |
-| 429 | Rate limited |
-| 500 | Server error (logged + GlitchTip) |
+| HTTP status | When                              |
+| ----------- | --------------------------------- |
+| 200         | OK with body                      |
+| 201         | Created                           |
+| 204         | OK no body                        |
+| 400         | Validation failed                 |
+| 401         | Not authenticated                 |
+| 403         | Authenticated but not allowed     |
+| 404         | Not found                         |
+| 409         | Conflict (e.g. duplicate slug)    |
+| 429         | Rate limited                      |
+| 500         | Server error (logged + GlitchTip) |
 
 Pagination: cursor-based.
 
@@ -51,14 +51,17 @@ Response includes `nextCursor` (null when exhausted).
 ## Public endpoints
 
 ### `GET /v1/health`
+
 Liveness check. Returns `{ "status": "ok", "uptime": 12345 }`.
 
 ### `GET /v1/projects`
+
 List published projects.
 
 Query: `?tag=<slug>&limit=20&cursor=<>`
 
 Response 200:
+
 ```jsonc
 {
   "items": [
@@ -78,14 +81,17 @@ Response 200:
 ```
 
 ### `GET /v1/projects/:slug`
+
 One project, including images and full description.
 
 404 if not found or not published.
 
 ### `GET /v1/posts`
+
 List published posts. Query: `?tag=&limit=&cursor=`.
 
 Response 200:
+
 ```jsonc
 {
   "items": [
@@ -105,15 +111,19 @@ Response 200:
 ```
 
 ### `GET /v1/posts/:slug`
+
 Full post with `contentMd`. 404 if draft or missing.
 
 ### `GET /v1/tags`
+
 All tags, with counts of published projects + posts.
 
 ### `GET /v1/recommendations`
+
 List approved recommendations, newest first.
 
 Response 200:
+
 ```jsonc
 {
   "items": [
@@ -126,25 +136,27 @@ Response 200:
         "username": "string | null",
         "avatarUrl": "string | null",
         "profileUrl": "string",
-        "provider": "github | linkedin"
-      }
-    }
-  ]
+        "provider": "github | linkedin",
+      },
+    },
+  ],
 }
 ```
 
 No pagination — total count is small by design.
 
 ### `POST /v1/contact`
+
 Submit a contact form.
 
 Body:
+
 ```jsonc
 {
   "name": "string (1-80)",
   "email": "valid email",
   "message": "string (10-2000)",
-  "captchaToken": "string"  // hCaptcha
+  "captchaToken": "string", // hCaptcha
 }
 ```
 
@@ -157,6 +169,7 @@ Body:
 ## Auth endpoints
 
 ### `POST /v1/auth/login`
+
 Body: `{ "email", "password" }`.
 
 - 200 + `Set-Cookie: pf_session=...; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`
@@ -165,9 +178,11 @@ Body: `{ "email", "password" }`.
 - Rate limit: 10 per IP per 15 min
 
 ### `POST /v1/auth/logout`
+
 204. Clears `pf_session`.
 
 ### `GET /v1/auth/me`
+
 - 200 with `{ id, email, role }` if authenticated
 - 401 otherwise
 
@@ -178,12 +193,14 @@ Body: `{ "email", "password" }`.
 Used only for the "leave a recommendation" flow. Issues a separate short-lived cookie (`rec_session`) — entirely independent from the admin `pf_session`.
 
 ### `GET /v1/auth/oauth/:provider`
+
 Redirects the browser to the OAuth provider's authorization page.
 
 - `:provider` ∈ `{ github, linkedin }`
 - Stores a CSRF `state` param in a short-lived cookie before redirect
 
 ### `GET /v1/auth/oauth/:provider/callback`
+
 OAuth callback. Exchanges the code for a token, fetches the user's profile, upserts into `recommendation_authors`, then issues a `rec_session` cookie.
 
 - `rec_session`: `HttpOnly`, `Secure`, `SameSite=Lax`, TTL 1 hour — only needed long enough to submit
@@ -191,12 +208,14 @@ OAuth callback. Exchanges the code for a token, fetches the user's profile, upse
 - On failure: redirects to `/recommendations?auth=error`
 
 ### `POST /v1/recommendations`
+
 Submit a recommendation. Requires a valid `rec_session` cookie.
 
 Body:
+
 ```jsonc
 {
-  "comment": "string (10–1000)"
+  "comment": "string (10–1000)",
 }
 ```
 
@@ -206,6 +225,7 @@ Body:
 - Rate limit: 3 attempts per IP per hour
 
 ### `POST /v1/auth/oauth/logout`
+
 Clears `rec_session`. 204.
 
 ---
@@ -216,18 +236,19 @@ All under `/v1/admin/*`. Middleware verifies JWT and `role === "admin"`.
 
 ### Projects
 
-| Method | Path | Notes |
-|---|---|---|
-| GET | `/v1/admin/projects` | All projects, including drafts and soft-deleted (with `?includeDeleted=true`) |
-| POST | `/v1/admin/projects` | Create. Body validated by Zod schema. 201 + Location header. |
-| GET | `/v1/admin/projects/:id` | Full project record. |
-| PATCH | `/v1/admin/projects/:id` | Partial update. |
-| DELETE | `/v1/admin/projects/:id` | Soft delete. |
-| POST | `/v1/admin/projects/:id/restore` | Undo soft delete. |
-| POST | `/v1/admin/projects/:id/publish` | Sets `published = true` and triggers revalidation. |
-| POST | `/v1/admin/projects/:id/unpublish` | Sets `published = false`. |
+| Method | Path                               | Notes                                                                         |
+| ------ | ---------------------------------- | ----------------------------------------------------------------------------- |
+| GET    | `/v1/admin/projects`               | All projects, including drafts and soft-deleted (with `?includeDeleted=true`) |
+| POST   | `/v1/admin/projects`               | Create. Body validated by Zod schema. 201 + Location header.                  |
+| GET    | `/v1/admin/projects/:id`           | Full project record.                                                          |
+| PATCH  | `/v1/admin/projects/:id`           | Partial update.                                                               |
+| DELETE | `/v1/admin/projects/:id`           | Soft delete.                                                                  |
+| POST   | `/v1/admin/projects/:id/restore`   | Undo soft delete.                                                             |
+| POST   | `/v1/admin/projects/:id/publish`   | Sets `published = true` and triggers revalidation.                            |
+| POST   | `/v1/admin/projects/:id/unpublish` | Sets `published = false`.                                                     |
 
 Body example for create/update:
+
 ```jsonc
 {
   "slug": "string",
@@ -241,7 +262,7 @@ Body example for create/update:
   "repoUrl": "string | null",
   "featured": false,
   "displayOrder": 0,
-  "tagSlugs": ["react", "typescript"]
+  "tagSlugs": ["react", "typescript"],
 }
 ```
 
@@ -249,28 +270,29 @@ Body example for create/update:
 
 Same shape as projects, with `publishedAt` instead of `published`. Setting `publishedAt = now()` on publish action.
 
-| Method | Path |
-|---|---|
-| GET | `/v1/admin/posts` |
-| POST | `/v1/admin/posts` |
-| GET | `/v1/admin/posts/:id` |
-| PATCH | `/v1/admin/posts/:id` |
-| DELETE | `/v1/admin/posts/:id` |
-| POST | `/v1/admin/posts/:id/publish` |
-| POST | `/v1/admin/posts/:id/unpublish` |
+| Method | Path                            |
+| ------ | ------------------------------- |
+| GET    | `/v1/admin/posts`               |
+| POST   | `/v1/admin/posts`               |
+| GET    | `/v1/admin/posts/:id`           |
+| PATCH  | `/v1/admin/posts/:id`           |
+| DELETE | `/v1/admin/posts/:id`           |
+| POST   | `/v1/admin/posts/:id/publish`   |
+| POST   | `/v1/admin/posts/:id/unpublish` |
 
 ### Tags
 
-| Method | Path |
-|---|---|
-| GET | `/v1/admin/tags` |
-| POST | `/v1/admin/tags` |
-| PATCH | `/v1/admin/tags/:id` |
+| Method | Path                 |
+| ------ | -------------------- |
+| GET    | `/v1/admin/tags`     |
+| POST   | `/v1/admin/tags`     |
+| PATCH  | `/v1/admin/tags/:id` |
 | DELETE | `/v1/admin/tags/:id` |
 
 ### Media
 
 #### `POST /v1/admin/media/uploads`
+
 Body: `{ "filename", "contentType", "byteSize" }`
 
 Returns a pre-signed PUT URL the client uses to upload directly to R2:
@@ -279,7 +301,7 @@ Returns a pre-signed PUT URL the client uses to upload directly to R2:
 {
   "uploadUrl": "https://...r2...?X-Amz-Signature=...",
   "publicUrl": "https://cdn.portfolio.example.com/uploads/...",
-  "expiresIn": 300
+  "expiresIn": 300,
 }
 ```
 
@@ -287,27 +309,27 @@ Constraints: `contentType ∈ { image/png, image/jpeg, image/webp, image/gif }`;
 
 ### Contact submissions (read-only)
 
-| Method | Path | Notes |
-|---|---|---|
-| GET | `/v1/admin/contact` | Paginated list, newest first |
-| GET | `/v1/admin/contact/:id` | Detail |
-| DELETE | `/v1/admin/contact/:id` | Hard delete |
+| Method | Path                    | Notes                        |
+| ------ | ----------------------- | ---------------------------- |
+| GET    | `/v1/admin/contact`     | Paginated list, newest first |
+| GET    | `/v1/admin/contact/:id` | Detail                       |
+| DELETE | `/v1/admin/contact/:id` | Hard delete                  |
 
 ### Recommendations
 
-| Method | Path | Notes |
-|---|---|---|
-| GET | `/v1/admin/recommendations` | All recommendations; filter by `?status=pending\|approved\|rejected` |
-| GET | `/v1/admin/recommendations/:id` | Detail with full author info |
-| POST | `/v1/admin/recommendations/:id/approve` | Sets `status = approved`, triggers revalidation of `/recommendations` |
-| POST | `/v1/admin/recommendations/:id/reject` | Sets `status = rejected` |
-| DELETE | `/v1/admin/recommendations/:id` | Hard delete |
+| Method | Path                                    | Notes                                                                 |
+| ------ | --------------------------------------- | --------------------------------------------------------------------- |
+| GET    | `/v1/admin/recommendations`             | All recommendations; filter by `?status=pending\|approved\|rejected`  |
+| GET    | `/v1/admin/recommendations/:id`         | Detail with full author info                                          |
+| POST   | `/v1/admin/recommendations/:id/approve` | Sets `status = approved`, triggers revalidation of `/recommendations` |
+| POST   | `/v1/admin/recommendations/:id/reject`  | Sets `status = rejected`                                              |
+| DELETE | `/v1/admin/recommendations/:id`         | Hard delete                                                           |
 
 ### Audit log
 
-| Method | Path |
-|---|---|
-| GET | `/v1/admin/audit-log` |
+| Method | Path                  |
+| ------ | --------------------- |
+| GET    | `/v1/admin/audit-log` |
 
 ---
 

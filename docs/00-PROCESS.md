@@ -10,12 +10,12 @@ The flow has three phases, each with explicit deliverables and an exit gate. You
 
 It is tempting to open a code editor and start writing JSX. Don't. The cost of changing a decision rises sharply once code exists:
 
-| When you change your mind | Cost |
-|---|---|
-| While writing the PRD | Edit a paragraph. |
-| While wireframing | Move some boxes. |
-| While coding | Rewrite components, migrations, API routes. |
-| After deploy | Migrate prod data, fix bugs, lose users. |
+| When you change your mind | Cost                                        |
+| ------------------------- | ------------------------------------------- |
+| While writing the PRD     | Edit a paragraph.                           |
+| While wireframing         | Move some boxes.                            |
+| While coding              | Rewrite components, migrations, API routes. |
+| After deploy              | Migrate prod data, fix bugs, lose users.    |
 
 Documentation is **cheap thinking**. The goal isn't a binder of paperwork — it's a deliberate sequence of decisions written down so future-you (and recruiters reading your repo) can see your reasoning.
 
@@ -27,18 +27,19 @@ Documentation is **cheap thinking**. The goal isn't a binder of paperwork — it
 
 ### Deliverables
 
-| Doc | Purpose |
-|---|---|
-| `01-PRD.md` | Product Requirements Document. The "what" and "why." Vision, target user, goals, success criteria, in-scope/out-of-scope features, non-functional requirements (performance, a11y, SEO). |
-| `02-USER_STORIES.md` | User stories ("As a visitor, I want to…") and acceptance criteria. Translates the PRD into testable behaviors. |
-| `03-TECH_STACK.md` | Stack decisions with rationale. Why Next.js over Remix, why Postgres over Mongo, etc. |
-| `04-ARCHITECTURE.md` | High-level system diagram. Frontend ↔ API ↔ DB ↔ third-party services. Request lifecycle. Auth model. Deployment topology. |
-| `05-DATA_MODEL.md` | ERD + table specs. Every entity, field, type, relationship, index. |
-| `06-API_SPEC.md` | REST endpoints, request/response shapes, status codes, auth requirements. Effectively your contract between frontend and backend. |
-| `08-ROADMAP.md` | Phased milestones (MVP → v1 → v2). What ships when. |
-| `adr/` | Architecture Decision Records — short docs capturing significant decisions and their context. One ADR per decision. |
+| Doc                  | Purpose                                                                                                                                                                                  |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `01-PRD.md`          | Product Requirements Document. The "what" and "why." Vision, target user, goals, success criteria, in-scope/out-of-scope features, non-functional requirements (performance, a11y, SEO). |
+| `02-USER_STORIES.md` | User stories ("As a visitor, I want to…") and acceptance criteria. Translates the PRD into testable behaviors.                                                                           |
+| `03-TECH_STACK.md`   | Stack decisions with rationale. Why Next.js over Remix, why Postgres over Mongo, etc.                                                                                                    |
+| `04-ARCHITECTURE.md` | High-level system diagram. Frontend ↔ API ↔ DB ↔ third-party services. Request lifecycle. Auth model. Deployment topology.                                                               |
+| `05-DATA_MODEL.md`   | ERD + table specs. Every entity, field, type, relationship, index.                                                                                                                       |
+| `06-API_SPEC.md`     | REST endpoints, request/response shapes, status codes, auth requirements. Effectively your contract between frontend and backend.                                                        |
+| `08-ROADMAP.md`      | Phased milestones (MVP → v1 → v2). What ships when.                                                                                                                                      |
+| `adr/`               | Architecture Decision Records — short docs capturing significant decisions and their context. One ADR per decision.                                                                      |
 
 ### Exit gate
+
 - [ ] You can explain the project in two sentences.
 - [ ] Every feature traces to a user story.
 - [ ] Every user story traces to one or more API endpoints + DB entities.
@@ -46,6 +47,7 @@ Documentation is **cheap thinking**. The goal isn't a binder of paperwork — it
 - [ ] Roadmap has a clear MVP that you could ship in ~2 weeks of focused work.
 
 ### Common mistakes
+
 - Writing a PRD that's just a feature list. A PRD without a "why" is a wishlist.
 - Skipping non-functional requirements. "It must load in <2s on 4G," "WCAG AA," "must work without JS for SEO" are all decisions you make once and reference later.
 - Trying to spec v2 features. Defer. The PRD covers MVP plus an explicit "later" section.
@@ -58,22 +60,24 @@ Documentation is **cheap thinking**. The goal isn't a binder of paperwork — it
 
 ### Deliverables
 
-| Artifact | Where |
-|---|---|
-| Sitemap | `07-DESIGN_SYSTEM.md` (or a separate `IA.md`) |
-| User flows | One flow per top-level task: "visit site," "read blog post," "submit contact form," "log into admin." |
-| Wireframes (low-fi) | Figma. Greyboxes only. Decide layout & hierarchy without getting distracted by color. |
-| Design tokens | `07-DESIGN_SYSTEM.md`. Colors, typography scale, spacing scale, radii, shadows, breakpoints. These map 1:1 to Tailwind config. |
-| Component inventory | List of every reusable component (`Button`, `Card`, `ProjectTile`, etc.) with variants. |
-| High-fidelity mockups | Figma. Desktop + mobile for every screen. |
-| Accessibility checklist | WCAG 2.1 AA. Color contrast, focus states, keyboard nav, alt text plan, reduced-motion. |
+| Artifact                | Where                                                                                                                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Sitemap                 | `07-DESIGN_SYSTEM.md` (or a separate `IA.md`)                                                                                  |
+| User flows              | One flow per top-level task: "visit site," "read blog post," "submit contact form," "log into admin."                          |
+| Wireframes (low-fi)     | Figma. Greyboxes only. Decide layout & hierarchy without getting distracted by color.                                          |
+| Design tokens           | `07-DESIGN_SYSTEM.md`. Colors, typography scale, spacing scale, radii, shadows, breakpoints. These map 1:1 to Tailwind config. |
+| Component inventory     | List of every reusable component (`Button`, `Card`, `ProjectTile`, etc.) with variants.                                        |
+| High-fidelity mockups   | Figma. Desktop + mobile for every screen.                                                                                      |
+| Accessibility checklist | WCAG 2.1 AA. Color contrast, focus states, keyboard nav, alt text plan, reduced-motion.                                        |
 
 ### Tools
+
 - **Figma** for wireframes + mockups. Free tier is enough.
 - **Excalidraw** or **tldraw** for diagrams in markdown docs.
 - **Coolors / Realtime Colors** to lock palette before tokens.
 
 ### Exit gate
+
 - [ ] Every screen in the sitemap has a hi-fi mockup.
 - [ ] Every component in the inventory appears in at least one mockup.
 - [ ] Design tokens are finalized and pasted into the design system doc.
@@ -81,6 +85,7 @@ Documentation is **cheap thinking**. The goal isn't a binder of paperwork — it
 - [ ] Mobile layout exists for every screen, not just "we'll figure it out later."
 
 ### Common mistakes
+
 - Designing in code. Stay in Figma — iteration is 10x faster.
 - Picking colors first. Lay out structure in greyscale, add color last.
 - Skipping the mobile pass and discovering at implementation time that the desktop layout doesn't reflow.
@@ -127,16 +132,19 @@ For each milestone in the roadmap:
 8. **Tag a release** at the end of each milestone.
 
 ### Testing pyramid
+
 - **Unit** (Vitest/Jest): pure functions, utils, schema validation. Many. Fast.
 - **Integration** (Supertest): API routes against a test database. Some.
 - **E2E** (Playwright): critical user journeys only — landing → contact submit, login → create project. Few. Slow.
 
 ### Observability from day one
+
 - Structured logging (`pino`) on the API.
 - Error tracking (Sentry free tier) on both web and api.
 - Basic uptime check (UptimeRobot or BetterStack free).
 
 ### Exit gate per milestone
+
 - [ ] All acceptance criteria pass.
 - [ ] All tests pass in CI.
 - [ ] Deployed to staging.

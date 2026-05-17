@@ -85,6 +85,7 @@ pnpm test:e2e        # Playwright
 ## Documentation
 
 If your change affects:
+
 - public behavior → update `CHANGELOG.md`
 - API surface → update `docs/06-API_SPEC.md`
 - data model → update `docs/05-DATA_MODEL.md` and add a migration
@@ -108,6 +109,7 @@ PRs that don't update docs they should are sent back.
 ## Issues
 
 Use the templates in `.github/ISSUE_TEMPLATE/`:
+
 - **Bug** — what happened, what was expected, repro steps.
 - **Feature** — user story format, why this matters.
 

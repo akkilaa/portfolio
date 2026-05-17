@@ -1,4 +1,9 @@
-import type { ContactSubmission, CreateContactInput, Paginated, PaginationOpts } from '@portfolio/shared'
+import type {
+  ContactSubmission,
+  CreateContactInput,
+  Paginated,
+  PaginationOpts,
+} from '@portfolio/shared'
 
 export interface IContactRepository {
   create(data: CreateContactInput): Promise<ContactSubmission>

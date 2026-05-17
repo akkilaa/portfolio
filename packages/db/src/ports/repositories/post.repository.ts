@@ -1,4 +1,13 @@
-import type { Post, PostWithTags, PostSummary, CreatePostInput, UpdatePostInput, Paginated, PaginationOpts, AdminListOpts } from '@portfolio/shared'
+import type {
+  Post,
+  PostWithTags,
+  PostSummary,
+  CreatePostInput,
+  UpdatePostInput,
+  Paginated,
+  PaginationOpts,
+  AdminListOpts,
+} from '@portfolio/shared'
 
 export interface IPostRepository {
   findBySlug(slug: string): Promise<PostWithTags | null>

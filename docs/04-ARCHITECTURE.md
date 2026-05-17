@@ -15,7 +15,7 @@ High-level view of how the system is composed, how requests flow, and how it's d
                                │ HTTPS
                                ▼
    ┌──────────────────────────────────────────────────┐
-   │             akkila.dev                           │    
+   │             akkila.dev                           │
    │              Next.js (Self-Hosted)               │
    │  ┌──────────────┐  ┌─────────────────────────┐   │
    │  │ Public pages │  │ Admin pages (auth-gated)│   │
@@ -48,23 +48,28 @@ High-level view of how the system is composed, how requests flow, and how it's d
 ## 2. Components
 
 ### apps/web — Next.js
+
 - Renders public pages (mostly SSG with ISR, some SSR for dynamic content).
 - Renders the admin SPA-feel area under `/admin/*`.
 - Reads from the API for everything dynamic. Static project/post data may be cached at build with on-demand revalidation triggered by the API after writes probably ISR with hydration.
 
 ### apps/api — Express
+
 - REST endpoints under `/api/v1/*` (see `06-API_SPEC.md`).
 - Owns Postgres via Prisma.
 - Owns side effects: sending email, uploading to self-hosted with adapter for R2 tomorrow, validating captcha.
 - Stateless — horizontally scalable if ever needed.
 
 ### packages/db — Prisma client + schema + migrations
+
 - Imported by `apps/api` only. The web app does not talk to the DB directly.
 
 ### packages/shared — Zod schemas + shared TS types
+
 - Imported by both `apps/web` and `apps/api` for request/response shapes.
 
 ### packages/ui (optional)
+
 - Place for components shared between public and admin if duplication grows. Otherwise live in `apps/web`.
 
 ---
@@ -112,34 +117,34 @@ CSRF: form-encoded admin requests use a double-submit token; JSON requests rely 
 
 ## 5. Data flow & ownership
 
-| Concern | Owner | Notes |
-|---|---|---|
-| Schema migrations | `packages/db` | `pnpm db:migrate` runs on deploy via Railway pre-deploy. |
-| Image uploads | `apps/api` → R2 | API generates a pre-signed PUT URL; client uploads directly to R2. |
-| Email | `apps/api` → Resend | Templated via React Email. |
-| Captcha verification | `apps/api` → hCaptcha | Server-to-server only; never trust the client. |
-| Cache invalidation | `apps/api` → Next.js revalidate | Triggered after every admin write. |
+| Concern              | Owner                           | Notes                                                              |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------ |
+| Schema migrations    | `packages/db`                   | `pnpm db:migrate` runs on deploy via Railway pre-deploy.           |
+| Image uploads        | `apps/api` → R2                 | API generates a pre-signed PUT URL; client uploads directly to R2. |
+| Email                | `apps/api` → Resend             | Templated via React Email.                                         |
+| Captcha verification | `apps/api` → hCaptcha           | Server-to-server only; never trust the client.                     |
+| Cache invalidation   | `apps/api` → Next.js revalidate | Triggered after every admin write.                                 |
 
 ---
 
 ## 6. Failure modes & graceful degradation
 
-| Dependency down | Effect | Mitigation |
-|---|---|---|
-| API down | Public pages keep serving from ISR cache. Contact form fails with retry UI. | Cache long; show last-good content. |
-| Postgres down | All writes fail; reads from API fail; cached pages still serve. | Next.js ISR cache mitigates for public reads. |
-| Resend down | Contact submission persists; email retry is best-effort. | Persist first, send second; queue-and-retry. |
-| R2 down | Image uploads fail; existing images keep serving. | Show clear error in admin upload UI. |
+| Dependency down | Effect                                                                      | Mitigation                                    |
+| --------------- | --------------------------------------------------------------------------- | --------------------------------------------- |
+| API down        | Public pages keep serving from ISR cache. Contact form fails with retry UI. | Cache long; show last-good content.           |
+| Postgres down   | All writes fail; reads from API fail; cached pages still serve.             | Next.js ISR cache mitigates for public reads. |
+| Resend down     | Contact submission persists; email retry is best-effort.                    | Persist first, send second; queue-and-retry.  |
+| R2 down         | Image uploads fail; existing images keep serving.                           | Show clear error in admin upload UI.          |
 
 ---
 
 ## 7. Environments
 
-| Env | Purpose | Web URL | API URL |
-|---|---|---|---|
-| local | Dev on laptop | `http://localhost:3000` | `http://localhost:4000` |
-| staging | `main` branch | `https://staging.akkila.dev` | `https://staging.api.akkila.dev` |
-| production | tagged release | `https://akkila.dev` | `https://api.akkila.dev` |
+| Env        | Purpose        | Web URL                      | API URL                          |
+| ---------- | -------------- | ---------------------------- | -------------------------------- |
+| local      | Dev on laptop  | `http://localhost:3000`      | `http://localhost:4000`          |
+| staging    | `main` branch  | `https://staging.akkila.dev` | `https://staging.api.akkila.dev` |
+| production | tagged release | `https://akkila.dev`         | `https://api.akkila.dev`         |
 
 Secrets per env via `.env` files or host environment variables. **Never** committed.
 

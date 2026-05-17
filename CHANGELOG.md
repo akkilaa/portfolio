@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial documentation set: PRD, user stories, tech stack, architecture, data model, API spec, design system, roadmap.
 - ADR-0001: Record architecture decisions.
 - CONTRIBUTING guide and PR/issue templates.
@@ -14,4 +15,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.1] — 2026-04-28
 
 ### Added
+
 - Project initialized.

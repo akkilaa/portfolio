@@ -4,7 +4,7 @@
 **Owner:** akkila
 **Last updated:** 2026-04-28
 
-> A PRD answers: *what* are we building, *who* is it for, *why*, and *how do we know it's done*. Not how it's built that's the job of the architecture and tech-stack docs.
+> A PRD answers: _what_ are we building, _who_ is it for, _why_, and _how do we know it's done_. Not how it's built that's the job of the architecture and tech-stack docs.
 
 ---
 
@@ -19,12 +19,14 @@ A personal fullstack portfolio site that showcases my projects, technical writin
 ## 2. Goals & Non-Goals
 
 ### Goals
+
 - G1. Convert visitors with hiring intent into a contact-form submission or email click.
 - G2. Demonstrate fullstack capability through both content (projects shown) and craft (the site itself is the demo with open-source code).
 - G3. Let me publish a project or blog post in under 5 minutes without touching code or redeploying.
 - G4. Score ≥ 95 on Lighthouse Performance, A11y, Best Practices, SEO for the landing page.
 
 ### Non-goals (explicitly out of scope for v1)
+
 - Real-time features (websockets, live chat).
 - Analytics dashboards beyond what Vercel/Plausible provide for free.
 - i18n / multi-language. English only at launch.
@@ -34,11 +36,11 @@ A personal fullstack portfolio site that showcases my projects, technical writin
 
 ## 3. Target users & personas
 
-| Persona | Primary intent | Success looks like |
-|---|---|---|
-| **Recruiter / hiring manager** | Skim profile in 60 seconds, decide if worth a call. | Reads hero + 3 projects, clicks "Contact" or copies email. |
-| **Engineer peer** | Evaluate code quality, read a blog post, browse repo. | Clicks GitHub link, reads a blog post end-to-end. |
-| **Future me (admin)** | Add/edit projects and posts on the go. | Logs in on phone, publishes, signs out. |
+| Persona                        | Primary intent                                        | Success looks like                                         |
+| ------------------------------ | ----------------------------------------------------- | ---------------------------------------------------------- |
+| **Recruiter / hiring manager** | Skim profile in 60 seconds, decide if worth a call.   | Reads hero + 3 projects, clicks "Contact" or copies email. |
+| **Engineer peer**              | Evaluate code quality, read a blog post, browse repo. | Clicks GitHub link, reads a blog post end-to-end.          |
+| **Future me (admin)**          | Add/edit projects and posts on the go.                | Logs in on phone, publishes, signs out.                    |
 
 ---
 
@@ -62,6 +64,7 @@ Detailed list with acceptance criteria lives in [`02-USER_STORIES.md`](./02-USER
 ## 5. Functional requirements
 
 ### Public site
+
 - F1. Landing page with hero, short intro, featured projects, recent posts, contact CTA.
 - F2. `/projects` listing with filter by tag (e.g., `react`, `typescript`).
 - F3. `/projects/[slug]` detail page with description, tech, links, images.
@@ -75,6 +78,7 @@ Detailed list with acceptance criteria lives in [`02-USER_STORIES.md`](./02-USER
 - F11. OpenGraph + Twitter card metadata with JSON LD on every page.
 
 ### Admin (auth-gated under `/admin`)
+
 - F11. Login form (email + password). Lockout after 5 failed attempts.
 - F12. Project list, create, edit, delete, publish/unpublish.
 - F13. Post list, create, edit, delete, publish/unpublish; markdown editor with live preview.
@@ -85,19 +89,19 @@ Detailed list with acceptance criteria lives in [`02-USER_STORIES.md`](./02-USER
 
 ## 6. Non-functional requirements
 
-| Category | Requirement |
-|---|---|
-| Performance | LCP < 2.0s on landing; TTI < 3.0s on 4G. JS bundle < 150KB gzipped on landing. |
-| LLM Performance | first-token latency (TTFT) and streaming throughput, separate from page load. A target like "TTFT < 1.5s, ≥ 20 tokens/s" sets a usable bar. |
-| LLM availability | If the LLM is unreachable or warming, the chat UI shows a "Chat offline — use the contact form" fallback within 3s.
-| Safety | prompt-injection hardening, output filtering for hallucinated personal details, rate limit per IP/session.
-| Compute budget | self-hosted, document the resource ceiling (e.g., "LLM uses ≤ X GB RAM, falls back to queue if concurrent requests > N").
-| Accessibility | WCAG 2.1 AA. Keyboard navigable. Visible focus states. Reduced-motion respected. |
-| SEO | Server-rendered (or SSG) HTML for all public pages. Structured data (JSON-LD) for `Person` and `BlogPosting`. |
-| Security | HTTPS only. CSRF protection on form submits. Helmet headers on API. Rate limiting on `/contact` and `/admin/login`. Passwords hashed with bcrypt (cost ≥ 12). |
-| Privacy | No third-party trackers. Privacy-friendly analytics (Plausible or none). Contact submissions retained 12 months. |
-| Reliability | Uptime ≥ 99.5%. API responds < 300ms p95. |
-| Browsers | Last 2 versions of Chrome, Firefox, Safari, Edge. iOS Safari 16+. Android Chrome 100+. |
+| Category         | Requirement                                                                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Performance      | LCP < 2.0s on landing; TTI < 3.0s on 4G. JS bundle < 150KB gzipped on landing.                                                                                |
+| LLM Performance  | first-token latency (TTFT) and streaming throughput, separate from page load. A target like "TTFT < 1.5s, ≥ 20 tokens/s" sets a usable bar.                   |
+| LLM availability | If the LLM is unreachable or warming, the chat UI shows a "Chat offline — use the contact form" fallback within 3s.                                           |
+| Safety           | prompt-injection hardening, output filtering for hallucinated personal details, rate limit per IP/session.                                                    |
+| Compute budget   | self-hosted, document the resource ceiling (e.g., "LLM uses ≤ X GB RAM, falls back to queue if concurrent requests > N").                                     |
+| Accessibility    | WCAG 2.1 AA. Keyboard navigable. Visible focus states. Reduced-motion respected.                                                                              |
+| SEO              | Server-rendered (or SSG) HTML for all public pages. Structured data (JSON-LD) for `Person` and `BlogPosting`.                                                 |
+| Security         | HTTPS only. CSRF protection on form submits. Helmet headers on API. Rate limiting on `/contact` and `/admin/login`. Passwords hashed with bcrypt (cost ≥ 12). |
+| Privacy          | No third-party trackers. Privacy-friendly analytics (Plausible or none). Contact submissions retained 12 months.                                              |
+| Reliability      | Uptime ≥ 99.5%. API responds < 300ms p95.                                                                                                                     |
+| Browsers         | Last 2 versions of Chrome, Firefox, Safari, Edge. iOS Safari 16+. Android Chrome 100+.                                                                        |
 
 ---
 
@@ -122,11 +126,11 @@ Detailed list with acceptance criteria lives in [`02-USER_STORIES.md`](./02-USER
 
 ## 9. Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|---|---|---|---|
-| Scope creep (real-time chat, comments, etc.) | High | High | Strict v1 scope; "later" list documented below. |
-| Spending weeks on design polish | High | Medium | Time-box design phase to 1 week; ship at "good," iterate after. |
-| Admin UX nobody but me sees → over-investment | Medium | Low | Use a component library (e.g., shadcn) for admin to ship fast. |
+| Risk                                          | Likelihood | Impact | Mitigation                                                      |
+| --------------------------------------------- | ---------- | ------ | --------------------------------------------------------------- |
+| Scope creep (real-time chat, comments, etc.)  | High       | High   | Strict v1 scope; "later" list documented below.                 |
+| Spending weeks on design polish               | High       | Medium | Time-box design phase to 1 week; ship at "good," iterate after. |
+| Admin UX nobody but me sees → over-investment | Medium     | Low    | Use a component library (e.g., shadcn) for admin to ship fast.  |
 
 ---
 

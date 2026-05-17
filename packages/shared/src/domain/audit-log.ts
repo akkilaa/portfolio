@@ -10,8 +10,6 @@ export type AuditLog = {
   createdAt: Date
 }
 
-export type CreateAuditLogInput =
-  Expand<
-    Partial<Omit<AuditLog, 'id' | 'createdAt'>> &
-      Pick<AuditLog, 'action' | 'entityType'>
-  >
+export type CreateAuditLogInput = Expand<
+  Partial<Omit<AuditLog, 'id' | 'createdAt'>> & Pick<AuditLog, 'action' | 'entityType'>
+>

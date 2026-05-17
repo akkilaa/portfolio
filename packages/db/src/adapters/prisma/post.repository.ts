@@ -1,10 +1,21 @@
 import type { PrismaClient } from '@prisma'
 import type { IPostRepository } from '@db/ports/repositories/post.repository'
-import type { Post, PostWithTags, PostSummary, CreatePostInput, UpdatePostInput, Paginated, PaginationOpts, AdminListOpts } from '@portfolio/shared'
+import type {
+  Post,
+  PostWithTags,
+  PostSummary,
+  CreatePostInput,
+  UpdatePostInput,
+  Paginated,
+  PaginationOpts,
+  AdminListOpts,
+} from '@portfolio/shared'
 
 const tagInclude = { postTags: { include: { tag: true } } }
 
-function mapTags(postTags: { tag: { id: string; slug: string; label: string; color: string | null } }[]) {
+function mapTags(
+  postTags: { tag: { id: string; slug: string; label: string; color: string | null } }[],
+) {
   return postTags.map((pt) => pt.tag)
 }
 
@@ -25,7 +36,11 @@ export class PrismaPostRepository implements IPostRepository {
     return this.db.post.findFirst({ where: { id, deletedAt: null } })
   }
 
-  async findPublished({ limit = 20, cursor, tag }: PaginationOpts & { tag?: string }): Promise<Paginated<PostSummary>> {
+  async findPublished({
+    limit = 20,
+    cursor,
+    tag,
+  }: PaginationOpts & { tag?: string }): Promise<Paginated<PostSummary>> {
     const rows = await this.db.post.findMany({
       where: {
         publishedAt: { not: null },
@@ -57,7 +72,11 @@ export class PrismaPostRepository implements IPostRepository {
     }
   }
 
-  async findAll({ limit = 20, cursor, includeDeleted = false }: AdminListOpts): Promise<Paginated<Post>> {
+  async findAll({
+    limit = 20,
+    cursor,
+    includeDeleted = false,
+  }: AdminListOpts): Promise<Paginated<Post>> {
     const rows = await this.db.post.findMany({
       where: includeDeleted ? {} : { deletedAt: null },
       orderBy: { createdAt: 'desc' },
@@ -76,9 +95,11 @@ export class PrismaPostRepository implements IPostRepository {
     return this.db.post.create({
       data: {
         ...rest,
-        ...(tagSlugs?.length ? {
-          postTags: { create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })) },
-        } : {}),
+        ...(tagSlugs?.length
+          ? {
+              postTags: { create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })) },
+            }
+          : {}),
       },
     })
   }
@@ -89,12 +110,14 @@ export class PrismaPostRepository implements IPostRepository {
       where: { id },
       data: {
         ...rest,
-        ...(tagSlugs ? {
-          postTags: {
-            deleteMany: {},
-            create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })),
-          },
-        } : {}),
+        ...(tagSlugs
+          ? {
+              postTags: {
+                deleteMany: {},
+                create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })),
+              },
+            }
+          : {}),
       },
     })
   }

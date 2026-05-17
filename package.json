@@ -2,6 +2,7 @@
   "name": "portfolio",
   "version": "1.0.0",
   "private": false,
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -9,11 +10,30 @@
     "typecheck": "turbo typecheck",
     "test": "turbo test",
     "db:migrate": "turbo db:migrate",
-    "db:generate": "turbo db:generate"
+    "db:generate": "turbo db:generate",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.8.0",
-    "turbo": "^2.9.12"
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "prettier": "^3.8.3",
+    "turbo": "^2.9.12",
+    "typescript-eslint": "^8.59.3"
   },
   "engines": {
     "node": ">=22",

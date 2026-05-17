@@ -13,7 +13,7 @@ If you're reading this cold: AT Protocol is the federated/decentralized protocol
 
 Two early decisions accidentally stack the deck:
 
-- **`akkila.dev` is owned.** Atproto handles can *be* a domain via a `.well-known/atproto-did` file. Your portfolio domain, your bsky handle, and your atproto identity become one thing.
+- **`akkila.dev` is owned.** Atproto handles can _be_ a domain via a `.well-known/atproto-did` file. Your portfolio domain, your bsky handle, and your atproto identity become one thing.
 - **Markdown for content.** Portable across Lexicons (e.g. `com.whtwnd.blog.entry`) without rewriting.
 
 Add a few cheap structural decisions in v1 and a future "I publish to my own PDS, my site is just a UI on top of records" pivot is straightforward instead of a rewrite.
@@ -42,7 +42,7 @@ ALTER TABLE projects ADD COLUMN at_uri TEXT NULL;
 ALTER TABLE projects ADD COLUMN cid TEXT NULL;
 ```
 
-Cost today: zero. They sit empty until/unless you publish a record to a PDS later. Adding these *after* live data exists is a real migration with backfill considerations — much more annoying.
+Cost today: zero. They sit empty until/unless you publish a record to a PDS later. Adding these _after_ live data exists is a real migration with backfill considerations — much more annoying.
 
 > Update `docs/05-DATA_MODEL.md` to include these columns when this section is acted on.
 
@@ -62,21 +62,21 @@ Today: GitHub OAuth + LinkedIn. Define a small interface so adding atproto sign-
 
 ```ts
 // packages/shared/src/identity.ts
-export type IdentityKind = "github" | "linkedin" | "atproto";
+export type IdentityKind = 'github' | 'linkedin' | 'atproto'
 
 export interface VerifiedIdentity {
-  kind: IdentityKind;
-  externalId: string;       // did:plc:..., gh user id, li urn
-  displayName: string;
-  avatarUrl?: string;
-  profileUrl: string;       // public link visitors can click to verify
-  verifiedAt: Date;
+  kind: IdentityKind
+  externalId: string // did:plc:..., gh user id, li urn
+  displayName: string
+  avatarUrl?: string
+  profileUrl: string // public link visitors can click to verify
+  verifiedAt: Date
 }
 
 export interface IdentityProvider {
-  kind: IdentityKind;
-  beginAuth(req: Request, res: Response): Promise<void>;
-  completeAuth(req: Request): Promise<VerifiedIdentity>;
+  kind: IdentityKind
+  beginAuth(req: Request, res: Response): Promise<void>
+  completeAuth(req: Request): Promise<VerifiedIdentity>
 }
 ```
 
@@ -102,17 +102,20 @@ Stub these as 501 / empty handlers so they appear in routing diagrams and can't 
 In ascending ambition. Nothing here is v1 — these are options for v2 / v3.
 
 ### Tier 1 — Cross-post (a weekend)
+
 - On every blog publish, also write a thread to Bluesky linking back. Or write a `com.whtwnd.blog.entry` record (Whitewind) so the post lives in atproto natively.
 - Embed the resulting Bluesky reply thread on the blog page as your **comment system**. Free moderation tools, social distribution, zero new infra.
 - Display your bsky handle prominently on the site.
 
 ### Tier 2 — Records-first content (a sprint)
-- Treat blog posts as atproto records *first*, your DB as a cache.
+
+- Treat blog posts as atproto records _first_, your DB as a cache.
 - The "Publish" admin action writes a record to your PDS (Bluesky's, initially); your site reads from your repo via the firehose / `com.atproto.repo.getRecord`.
 - Your portfolio is now genuinely federated — anyone running an atproto reader sees your stuff.
 - Comments via Bluesky thread continue to work.
 
 ### Tier 3 — Custom Lexicons + self-hosted PDS (a real project)
+
 - Define your own Lexicons:
   - `dev.akkila.project` for portfolio entries.
   - `dev.akkila.recommendation` for recommender records.
@@ -120,6 +123,7 @@ In ascending ambition. Nothing here is v1 — these are options for v2 / v3.
 - The portfolio is now itself a small atproto application — strong piece to point to in interviews.
 
 ### Adjacent direction
+
 - Identity-first auth across the whole admin: log in via atproto OAuth instead of (or alongside) email + password.
 - Aggregator: a public "ATmosphere activity" page on `/at` showing your posts, likes, follows.
 

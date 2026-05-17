@@ -1,17 +1,27 @@
-import type { PrismaClient } from '@prisma'
+import type { PrismaClient, Prisma } from '@prisma'
 import type { IProjectRepository } from '@db/ports/repositories/project.repository'
-import type { Project, ProjectWithTagsAndImages, CreateProjectInput, UpdateProjectInput, Paginated, PaginationOpts, AdminListOpts } from '@portfolio/shared'
+import type {
+  Project,
+  ProjectWithTagsAndImages,
+  CreateProjectInput,
+  UpdateProjectInput,
+  Paginated,
+  PaginationOpts,
+  AdminListOpts,
+} from '@portfolio/shared'
 
 const fullInclude = {
   projectTags: { include: { tag: true } },
   projectImages: { orderBy: { displayOrder: 'asc' as const } },
 }
 
-function mapProject(row: any): ProjectWithTagsAndImages {
+type ProjectRow = Prisma.ProjectGetPayload<{ include: typeof fullInclude }>
+
+function mapProject(row: ProjectRow): ProjectWithTagsAndImages {
   const { projectTags, projectImages, ...project } = row
   return {
     ...project,
-    tags: projectTags.map((pt: any) => pt.tag),
+    tags: projectTags.map((pt) => pt.tag),
     images: projectImages,
   }
 }
@@ -31,7 +41,11 @@ export class PrismaProjectRepository implements IProjectRepository {
     return this.db.project.findFirst({ where: { id, deletedAt: null } })
   }
 
-  async findPublished({ limit = 20, cursor, tag }: PaginationOpts & { tag?: string }): Promise<Paginated<ProjectWithTagsAndImages>> {
+  async findPublished({
+    limit = 20,
+    cursor,
+    tag,
+  }: PaginationOpts & { tag?: string }): Promise<Paginated<ProjectWithTagsAndImages>> {
     const rows = await this.db.project.findMany({
       where: {
         published: true,
@@ -59,7 +73,11 @@ export class PrismaProjectRepository implements IProjectRepository {
     return rows.map(mapProject)
   }
 
-  async findAll({ limit = 20, cursor, includeDeleted = false }: AdminListOpts): Promise<Paginated<Project>> {
+  async findAll({
+    limit = 20,
+    cursor,
+    includeDeleted = false,
+  }: AdminListOpts): Promise<Paginated<Project>> {
     const rows = await this.db.project.findMany({
       where: includeDeleted ? {} : { deletedAt: null },
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
@@ -78,9 +96,11 @@ export class PrismaProjectRepository implements IProjectRepository {
     return this.db.project.create({
       data: {
         ...rest,
-        ...(tagSlugs?.length ? {
-          projectTags: { create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })) },
-        } : {}),
+        ...(tagSlugs?.length
+          ? {
+              projectTags: { create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })) },
+            }
+          : {}),
       },
     })
   }
@@ -91,12 +111,14 @@ export class PrismaProjectRepository implements IProjectRepository {
       where: { id },
       data: {
         ...rest,
-        ...(tagSlugs ? {
-          projectTags: {
-            deleteMany: {},
-            create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })),
-          },
-        } : {}),
+        ...(tagSlugs
+          ? {
+              projectTags: {
+                deleteMany: {},
+                create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })),
+              },
+            }
+          : {}),
       },
     })
   }

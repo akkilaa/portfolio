@@ -1,9 +1,19 @@
-import type { Project, ProjectWithTagsAndImages, CreateProjectInput, UpdateProjectInput, Paginated, PaginationOpts, AdminListOpts } from '@portfolio/shared'
+import type {
+  Project,
+  ProjectWithTagsAndImages,
+  CreateProjectInput,
+  UpdateProjectInput,
+  Paginated,
+  PaginationOpts,
+  AdminListOpts,
+} from '@portfolio/shared'
 
 export interface IProjectRepository {
   findBySlug(slug: string): Promise<ProjectWithTagsAndImages | null>
   findById(id: string): Promise<Project | null>
-  findPublished(opts: PaginationOpts & { tag?: string }): Promise<Paginated<ProjectWithTagsAndImages>>
+  findPublished(
+    opts: PaginationOpts & { tag?: string },
+  ): Promise<Paginated<ProjectWithTagsAndImages>>
   findFeatured(): Promise<ProjectWithTagsAndImages[]>
   findAll(opts: AdminListOpts): Promise<Paginated<Project>>
   create(data: CreateProjectInput): Promise<Project>
