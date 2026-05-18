@@ -1,9 +1,16 @@
 import { Router } from 'express'
 import { ROUTES } from '@api/constants/routes'
-import postsRouter from '@api/routes/posts.router'
+import { createPostsRouter } from '@api/routes/posts.router'
+import type { PostsController } from '@api/controllers/posts.controller'
 
-const router = Router()
+type V1Controllers = {
+  posts: PostsController
+}
 
-router.use(ROUTES.POSTS, postsRouter)
+export function createV1Router(controllers: V1Controllers): Router {
+  const router = Router()
 
-export default router
+  router.use(ROUTES.POSTS, createPostsRouter(controllers.posts))
+
+  return router
+}

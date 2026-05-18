@@ -1,37 +1,36 @@
-import {
-  createPrismaClient,
-  PrismaUserRepository,
-  PrismaPostRepository,
-  PrismaProjectRepository,
-  PrismaTagRepository,
-  PrismaContactRepository,
-  PrismaRecommendationRepository,
-  PrismaRecommendationAuthorRepository,
-  PrismaAuditLogRepository,
-  PrismaLlmChatLogRepository,
-} from '@portfolio/db'
-import type { IUserRepository } from '@api/ports/user.repository'
+import express, { type Express } from 'express'
+import { createPrismaClient, PrismaPostRepository } from '@portfolio/db'
 import type { IPostRepository } from '@api/ports/post.repository'
-import type { IProjectRepository } from '@api/ports/project.repository'
-import type { ITagRepository } from '@api/ports/tag.repository'
-import type { IContactRepository } from '@api/ports/contact.repository'
-import type {
-  IRecommendationRepository,
-  IRecommendationAuthorRepository,
-} from '@api/ports/recommendation.repository'
-import type { IAuditLogRepository } from '@api/ports/audit-log.repository'
-import type { ILlmChatLogRepository } from '@api/ports/llm-chat-log.repository'
+import { PostsService } from '@api/services/posts.service'
+import { PostsController } from '@api/controllers/posts.controller'
+import { createV1Router } from '@api/routes/v1.router'
 
-const prisma = createPrismaClient()
+type App = {
+  app: Express
+  dispose: () => Promise<void>
+}
 
-export const userRepository: IUserRepository = new PrismaUserRepository(prisma)
-export const postRepository: IPostRepository = new PrismaPostRepository(prisma)
-export const projectRepository: IProjectRepository = new PrismaProjectRepository(prisma)
-export const tagRepository: ITagRepository = new PrismaTagRepository(prisma)
-export const contactRepository: IContactRepository = new PrismaContactRepository(prisma)
-export const recommendationRepository: IRecommendationRepository =
-  new PrismaRecommendationRepository(prisma)
-export const recommendationAuthorRepository: IRecommendationAuthorRepository =
-  new PrismaRecommendationAuthorRepository(prisma)
-export const auditLogRepository: IAuditLogRepository = new PrismaAuditLogRepository(prisma)
-export const llmChatLogRepository: ILlmChatLogRepository = new PrismaLlmChatLogRepository(prisma)
+export function createApp(): App {
+  const prisma = createPrismaClient()
+
+  // Outbound adapters
+
+  const postRepository: IPostRepository = new PrismaPostRepository(prisma)
+
+  // Application services
+  const postsService = new PostsService(postRepository)
+
+  // Inbound adapters (HTTP controllers)
+  const postsController = new PostsController(postsService)
+
+  // Express app
+  const app = express()
+  app.use(express.json())
+  app.get('/', (_req, res) => res.json({ status: 'ok' }))
+  app.use('/v1', createV1Router({ posts: postsController }))
+
+  return {
+    app,
+    dispose: () => prisma.$disconnect(),
+  }
+}
