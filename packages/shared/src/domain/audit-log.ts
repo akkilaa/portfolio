@@ -1,4 +1,4 @@
-import type { Expand } from '@shared/helper-types'
+import type { Expand } from '../helper-types'
 
 export type AuditLog = {
   id: string

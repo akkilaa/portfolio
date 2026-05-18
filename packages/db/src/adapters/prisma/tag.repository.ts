@@ -1,8 +1,7 @@
-import type { PrismaClient } from '@prisma'
-import type { ITagRepository } from '@db/ports/repositories/tag.repository'
+import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type { Tag, CreateTagInput, UpdateTagInput } from '@portfolio/shared'
 
-export class PrismaTagRepository implements ITagRepository {
+export class PrismaTagRepository {
   constructor(private readonly db: PrismaClient) {}
 
   findAll(): Promise<Tag[]> {

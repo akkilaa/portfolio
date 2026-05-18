@@ -1,5 +1,4 @@
-import type { AuditLog as PrismaAuditLog, PrismaClient } from '@prisma'
-import type { IAuditLogRepository } from '@db/ports/repositories/audit-log.repository'
+import type { AuditLog as PrismaAuditLog, PrismaClient } from '../../../prisma/src/generated/prisma'
 import type { AuditLog, CreateAuditLogInput, Paginated, PaginationOpts } from '@portfolio/shared'
 
 function toAuditLogMetadata(metadata: PrismaAuditLog['metadata']): Record<string, unknown> | null {
@@ -17,7 +16,7 @@ function toDomainAuditLog(row: PrismaAuditLog): AuditLog {
   }
 }
 
-export class PrismaAuditLogRepository implements IAuditLogRepository {
+export class PrismaAuditLogRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async create(data: CreateAuditLogInput): Promise<AuditLog> {

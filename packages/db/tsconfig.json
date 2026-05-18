@@ -5,8 +5,8 @@
     "rootDir": ".",
     "paths": {
       "@db": ["./src/index"],
-      "@db/*": ["./src/*"],
-      "@prisma": ["./prisma/src/generated/prisma"]
+      "@db/client": ["./prisma/src/generated/prisma"],
+      "@db/*": ["./src/*"]
     }
   },
   "include": ["src", "prisma"],

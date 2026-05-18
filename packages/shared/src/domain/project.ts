@@ -1,4 +1,4 @@
-import type { Tag } from '@shared/domain/tag'
+import type { Tag } from './tag'
 
 export type Project = {
   id: string

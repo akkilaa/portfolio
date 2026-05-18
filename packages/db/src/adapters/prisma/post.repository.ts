@@ -1,5 +1,4 @@
-import type { PrismaClient } from '@prisma'
-import type { IPostRepository } from '@db/ports/repositories/post.repository'
+import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type {
   Post,
   PostWithTags,
@@ -19,7 +18,7 @@ function mapTags(
   return postTags.map((pt) => pt.tag)
 }
 
-export class PrismaPostRepository implements IPostRepository {
+export class PrismaPostRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async findBySlug(slug: string): Promise<PostWithTags | null> {

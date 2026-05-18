@@ -2,6 +2,12 @@
   "name": "@portfolio/db",
   "version": "0.0.1",
   "private": true,
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
   "scripts": {
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

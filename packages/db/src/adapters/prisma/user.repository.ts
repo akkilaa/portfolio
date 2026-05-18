@@ -1,8 +1,7 @@
-import type { PrismaClient } from '@prisma'
-import type { IUserRepository } from '@db/ports/repositories/user.repository'
+import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type { User, CreateUserInput, UpdateUserInput } from '@portfolio/shared'
 
-export class PrismaUserRepository implements IUserRepository {
+export class PrismaUserRepository {
   constructor(private readonly db: PrismaClient) {}
 
   findById(id: string): Promise<User | null> {

@@ -1,5 +1,4 @@
-import type { PrismaClient, Prisma } from '@prisma'
-import type { IProjectRepository } from '@db/ports/repositories/project.repository'
+import type { PrismaClient, Prisma } from '../../../prisma/src/generated/prisma'
 import type {
   Project,
   ProjectWithTagsAndImages,
@@ -26,7 +25,7 @@ function mapProject(row: ProjectRow): ProjectWithTagsAndImages {
   }
 }
 
-export class PrismaProjectRepository implements IProjectRepository {
+export class PrismaProjectRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async findBySlug(slug: string): Promise<ProjectWithTagsAndImages | null> {

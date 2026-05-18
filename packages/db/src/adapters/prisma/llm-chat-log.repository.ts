@@ -1,8 +1,7 @@
-import type { PrismaClient } from '@prisma'
-import type { ILlmChatLogRepository } from '@db/ports/repositories/llm-chat-log.repository'
+import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type { LlmChatLog, CreateLlmChatLogInput } from '@portfolio/shared'
 
-export class PrismaLlmChatLogRepository implements ILlmChatLogRepository {
+export class PrismaLlmChatLogRepository {
   constructor(private readonly db: PrismaClient) {}
 
   create(data: CreateLlmChatLogInput): Promise<LlmChatLog> {

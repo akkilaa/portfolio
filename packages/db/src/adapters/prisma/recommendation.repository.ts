@@ -1,9 +1,4 @@
-import type { PrismaClient } from '@prisma'
-import type {
-  IRecommendationRepository,
-  IRecommendationAuthorRepository,
-} from '@db/ports/repositories/recommendation.repository'
-
+import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type {
   Recommendation,
   RecommendationWithAuthor,
@@ -15,7 +10,7 @@ import type {
 
 const authorInclude = { author: true }
 
-export class PrismaRecommendationAuthorRepository implements IRecommendationAuthorRepository {
+export class PrismaRecommendationAuthorRepository {
   constructor(private readonly db: PrismaClient) {}
 
   findByProvider(provider: string, providerId: string): Promise<RecommendationAuthor | null> {
@@ -34,7 +29,7 @@ export class PrismaRecommendationAuthorRepository implements IRecommendationAuth
   }
 }
 
-export class PrismaRecommendationRepository implements IRecommendationRepository {
+export class PrismaRecommendationRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async findApproved(): Promise<RecommendationWithAuthor[]> {

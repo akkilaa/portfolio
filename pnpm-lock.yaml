@@ -38,6 +38,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@portfolio/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@portfolio/shared':
         specifier: workspace:*
         version: link:../../packages/shared

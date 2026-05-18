@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "tsx watch server.ts",
+    "dev": "tsx watch --env-file=../../.env server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src server.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@portfolio/db": "workspace:*",
     "@portfolio/shared": "workspace:*",
     "express": "^5.2.1"
   },
