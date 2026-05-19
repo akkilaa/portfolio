@@ -5,6 +5,7 @@ import { PostsService } from '../src/services/posts.service'
 import { PostsController } from '../src//controllers/posts.controller'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
 import { publishedPostInput, draftPostInput, deletedPostInput } from './fixtures/posts.fixtures'
+import type { CreatePostInput } from '@portfolio/shared'
 
 let repo: InMemoryPostRepository
 
@@ -16,13 +17,28 @@ function app() {
   return composeApp({ posts: new PostsController(new PostsService(repo)) })
 }
 
+async function createDraft(input: CreatePostInput = draftPostInput) {
+  const res = await request(app()).post('/v1/posts').send(input)
+  return res.body
+}
+
+async function createPublished(input: CreatePostInput = publishedPostInput) {
+  const draft = await createDraft(input)
+  await request(app()).patch(`/v1/posts/${draft.id}/publish`)
+  return draft
+}
+
+async function createDeleted(input: CreatePostInput = deletedPostInput) {
+  const draft = await createDraft(input)
+  await request(app()).delete(`/v1/posts/${draft.id}`)
+  return draft
+}
+
 describe('Public post listing', () => {
   it('given published, draft, and deleted posts exist, only the published one should be visible', async () => {
-    const published = await repo.create(publishedPostInput)
-    await repo.publish(published.id)
-    await repo.create(draftPostInput)
-    const deleted = await repo.create(deletedPostInput)
-    await repo.delete(deleted.id)
+    await createPublished()
+    await createDraft()
+    await createDeleted()
 
     const res = await request(app()).get('/v1/posts')
 
@@ -32,9 +48,8 @@ describe('Public post listing', () => {
   })
 
   it('given no published posts exist, the listing should be empty with no next page', async () => {
-    await repo.create(draftPostInput)
-    const deleted = await repo.create(deletedPostInput)
-    await repo.delete(deleted.id)
+    await createDraft()
+    await createDeleted()
 
     const res = await request(app()).get('/v1/posts')
 
@@ -45,8 +60,7 @@ describe('Public post listing', () => {
 
   it('given more posts than the requested page size, a cursor to load the next page should be returned', async () => {
     for (const slug of ['post-1', 'post-2', 'post-3']) {
-      const post = await repo.create({ ...publishedPostInput, slug })
-      await repo.publish(post.id)
+      await createPublished({ ...publishedPostInput, slug })
     }
 
     const res = await request(app()).get('/v1/posts?limit=2')
@@ -58,8 +72,7 @@ describe('Public post listing', () => {
 
 describe('Reading a post by its slug', () => {
   it('given a valid published slug, the full post content should be returned', async () => {
-    const post = await repo.create(publishedPostInput)
-    await repo.publish(post.id)
+    await createPublished()
 
     const res = await request(app()).get(`/v1/posts/${publishedPostInput.slug}`)
 
@@ -75,8 +88,7 @@ describe('Reading a post by its slug', () => {
   })
 
   it('given a deleted post, its slug should no longer return any content', async () => {
-    const post = await repo.create(deletedPostInput)
-    await repo.delete(post.id)
+    await createDeleted()
 
     const res = await request(app()).get(`/v1/posts/${deletedPostInput.slug}`)
 
@@ -120,7 +132,7 @@ describe('Creating a post', () => {
 
 describe('Publishing a post', () => {
   it('given an existing draft post, publishing it should set a publication date', async () => {
-    const draft = await repo.create(draftPostInput)
+    const draft = await createDraft()
 
     const res = await request(app()).patch(`/v1/posts/${draft.id}/publish`)
 
@@ -129,7 +141,7 @@ describe('Publishing a post', () => {
   })
 
   it('given an existing draft post, publishing it should make it immediately visible in the public listing', async () => {
-    const draft = await repo.create(draftPostInput)
+    const draft = await createDraft()
     await request(app()).patch(`/v1/posts/${draft.id}/publish`)
 
     const res = await request(app()).get('/v1/posts')
@@ -142,8 +154,8 @@ describe('Publishing a post', () => {
 
 describe('Unpublishing a post', () => {
   it('given an existing published post, unpublishing it should immediately hide it from the public listing', async () => {
-    const post = await repo.create(publishedPostInput)
-    await repo.publish(post.id)
+    const post = await createPublished()
+
     await request(app()).patch(`/v1/posts/${post.id}/unpublish`)
 
     const res = await request(app()).get('/v1/posts')
@@ -154,8 +166,7 @@ describe('Unpublishing a post', () => {
 
 describe('Deleting a post', () => {
   it('given an existing published post, deleting it should succeed', async () => {
-    const post = await repo.create(publishedPostInput)
-    await repo.publish(post.id)
+    const post = await createPublished()
 
     const del = await request(app()).delete(`/v1/posts/${post.id}`)
 
@@ -163,8 +174,7 @@ describe('Deleting a post', () => {
   })
 
   it('given a deleted post, its slug should no longer resolve to any content', async () => {
-    const post = await repo.create(publishedPostInput)
-    await repo.publish(post.id)
+    const post = await createPublished()
     await request(app()).delete(`/v1/posts/${post.id}`)
 
     const res = await request(app()).get(`/v1/posts/${publishedPostInput.slug}`)
