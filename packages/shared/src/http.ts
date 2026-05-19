@@ -10,3 +10,11 @@ export type PostsQuery = PaginatedQuery & {
 export type AdminPostsQuery = PaginatedQuery & {
   includeDeleted?: string
 }
+
+export type ProjectsQuery = PaginatedQuery & {
+  tag?: string
+}
+
+export type AdminProjectsQuery = PaginatedQuery & {
+  includeDeleted?: string
+}

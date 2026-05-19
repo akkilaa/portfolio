@@ -1,10 +1,12 @@
 import express, { type Express } from 'express'
 import { createV1Router } from '@api/routes/v1.router'
 import type { PostsController } from '@api/controllers/posts.controller'
+import type { ProjectsController } from '@api/controllers/projects.controller'
 import { errorHandler } from '@api/middlewares/error-handler'
 
 type Controllers = {
   posts: PostsController
+  projects: ProjectsController
 }
 
 export function composeApp(controllers: Controllers): Express {

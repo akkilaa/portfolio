@@ -3,7 +3,10 @@ import request from 'supertest'
 import { composeApp } from '../src/container'
 import { PostsService } from '../src/services/posts.service'
 import { PostsController } from '../src//controllers/posts.controller'
+import { ProjectsService } from '../src/services/projects.service'
+import { ProjectsController } from '../src/controllers/projects.controller'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
+import { InMemoryProjectRepository } from './fakes/InMemoryProjectRepository'
 import { publishedPostInput, draftPostInput, deletedPostInput } from './fixtures/posts.fixtures'
 import type { CreatePostInput } from '@portfolio/shared'
 
@@ -14,7 +17,10 @@ beforeEach(() => {
 })
 
 function app() {
-  return composeApp({ posts: new PostsController(new PostsService(repo)) })
+  return composeApp({
+    posts: new PostsController(new PostsService(repo)),
+    projects: new ProjectsController(new ProjectsService(new InMemoryProjectRepository())),
+  })
 }
 
 async function createDraft(input: CreatePostInput = draftPostInput) {
@@ -98,15 +104,13 @@ describe('Reading a post by its slug', () => {
 
 describe('Creating a post', () => {
   it('a newly created post should start as a draft with no publication date', async () => {
-    const res = await request(app())
-      .post('/v1/posts')
-      .send({
-        slug: 'new-post',
-        title: 'New Post',
-        excerpt: 'fresh',
-        contentMd: '# New',
-        authorId: 'author-1',
-      })
+    const res = await request(app()).post('/v1/posts').send({
+      slug: 'new-post',
+      title: 'New Post',
+      excerpt: 'fresh',
+      contentMd: '# New',
+      authorId: 'author-1',
+    })
 
     expect(res.status).toBe(201)
     expect(res.body.slug).toBe('new-post')
@@ -114,15 +118,13 @@ describe('Creating a post', () => {
   })
 
   it('a draft post should not appear in the public listing until it is published', async () => {
-    await request(app())
-      .post('/v1/posts')
-      .send({
-        slug: 'new-post',
-        title: 'New Post',
-        excerpt: 'fresh',
-        contentMd: '# New',
-        authorId: 'author-1',
-      })
+    await request(app()).post('/v1/posts').send({
+      slug: 'new-post',
+      title: 'New Post',
+      excerpt: 'fresh',
+      contentMd: '# New',
+      authorId: 'author-1',
+    })
 
     const res = await request(app()).get('/v1/posts')
 

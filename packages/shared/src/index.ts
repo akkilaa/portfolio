@@ -9,7 +9,13 @@ export {
   ValidationError,
 } from './errors'
 
-export type { PaginatedQuery, PostsQuery, AdminPostsQuery } from './http'
+export type {
+  PaginatedQuery,
+  PostsQuery,
+  AdminPostsQuery,
+  ProjectsQuery,
+  AdminProjectsQuery,
+} from './http'
 
 export type {
   PostResponse,
@@ -18,6 +24,13 @@ export type {
   PostListResponse,
   AdminPostListResponse,
 } from './dtos/post.dto'
+
+export type {
+  ProjectResponse,
+  ProjectDetailResponse,
+  ProjectListResponse,
+  AdminProjectListResponse,
+} from './dtos/project.dto'
 
 export type { Expand } from './helper-types'
 
