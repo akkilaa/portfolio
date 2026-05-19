@@ -1,6 +1,8 @@
 # Write Tests
 
-Write integration tests for a feature in this project following the established conventions.
+Write integration tests for the feature: $ARGUMENTS
+
+Read the relevant controller, service, and port files for that feature before writing anything. Then produce the fixture file, fake repository (if it doesn't exist), and test file following the conventions below.
 
 ## Stack
 
