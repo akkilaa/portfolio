@@ -11,6 +11,7 @@ import type {
 
 export interface IPostRepository {
   findBySlug(slug: string): Promise<PostWithTags | null>
+  slugExists(slug: string): Promise<boolean>
   findById(id: string): Promise<Post | null>
   findPublished(opts: PaginationOpts & { tag?: string }): Promise<Paginated<PostSummary>>
   findAll(opts: AdminListOpts): Promise<Paginated<Post>>

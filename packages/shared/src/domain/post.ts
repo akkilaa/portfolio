@@ -37,7 +37,6 @@ export type CreatePostInput = {
   contentMd: string
   authorId: string
   coverImage?: string
-  tagSlugs?: string[]
 }
 
 export type UpdatePostInput = Partial<Omit<CreatePostInput, 'authorId'>>

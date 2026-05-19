@@ -1,4 +1,8 @@
-import type { AuditLog as PrismaAuditLog, PrismaClient } from '../../../prisma/src/generated/prisma'
+import type {
+  AuditLog as PrismaAuditLog,
+  PrismaClient,
+  Prisma,
+} from '../../../prisma/src/generated/prisma'
 import type { AuditLog, CreateAuditLogInput, Paginated, PaginationOpts } from '@portfolio/shared'
 
 function toAuditLogMetadata(metadata: PrismaAuditLog['metadata']): Record<string, unknown> | null {
@@ -20,7 +24,15 @@ export class PrismaAuditLogRepository {
   constructor(private readonly db: PrismaClient) {}
 
   async create(data: CreateAuditLogInput): Promise<AuditLog> {
-    const row = await this.db.auditLog.create({ data })
+    const row = await this.db.auditLog.create({
+      data: {
+        action: data.action,
+        entityType: data.entityType,
+        entityId: data.entityId ?? undefined,
+        actorId: data.actorId ?? undefined,
+        metadata: (data.metadata ?? undefined) as Prisma.InputJsonValue | undefined,
+      },
+    })
     return toDomainAuditLog(row)
   }
 

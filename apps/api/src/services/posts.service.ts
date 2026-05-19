@@ -5,7 +5,6 @@ import type {
   PaginationOpts,
   AdminListOpts,
 } from '@portfolio/shared'
-
 export class PostsService {
   constructor(private readonly posts: IPostRepository) {}
 
@@ -21,7 +20,7 @@ export class PostsService {
     return this.posts.findAll(opts)
   }
 
-  create(data: CreatePostInput) {
+  async create(data: CreatePostInput) {
     return this.posts.create(data)
   }
 

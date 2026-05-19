@@ -1,5 +1,16 @@
 export type { PaginationOpts, Paginated, AdminListOpts } from './domain/common'
 
+export {
+  AppError,
+  NotFoundError,
+  ConflictError,
+  ForeignKeyError,
+  BadRequestError,
+  ValidationError,
+} from './errors'
+
+export type { PaginatedQuery, PostsQuery, AdminPostsQuery } from './http'
+
 export type { Expand } from './helper-types'
 
 export type { User, UserRole, CreateUserInput, UpdateUserInput } from './domain/user'

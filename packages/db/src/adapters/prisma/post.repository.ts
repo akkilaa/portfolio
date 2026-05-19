@@ -9,6 +9,8 @@ import type {
   PaginationOpts,
   AdminListOpts,
 } from '@portfolio/shared'
+import { ConflictError, ForeignKeyError, BadRequestError, ValidationError } from '@portfolio/shared'
+import { isPrismaError, isPrismaValidationError } from '../../utils'
 
 const tagInclude = { postTags: { include: { tag: true } } }
 
@@ -20,6 +22,11 @@ function mapTags(
 
 export class PrismaPostRepository {
   constructor(private readonly db: PrismaClient) {}
+
+  async slugExists(slug: string): Promise<boolean> {
+    const count = await this.db.post.count({ where: { slug } })
+    return count > 0
+  }
 
   async findBySlug(slug: string): Promise<PostWithTags | null> {
     const row = await this.db.post.findFirst({
@@ -89,36 +96,22 @@ export class PrismaPostRepository {
     return { items, nextCursor: hasMore ? items[items.length - 1].id : null }
   }
 
-  create(data: CreatePostInput): Promise<Post> {
-    const { tagSlugs, ...rest } = data
-    return this.db.post.create({
-      data: {
-        ...rest,
-        ...(tagSlugs?.length
-          ? {
-              postTags: { create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })) },
-            }
-          : {}),
-      },
-    })
+  async create(data: CreatePostInput): Promise<Post> {
+    try {
+      return await this.db.post.create({ data })
+    } catch (e) {
+      if (isPrismaValidationError(e)) throw new ValidationError('Invalid data provided')
+      if (isPrismaError(e, 'P2003'))
+        throw new ForeignKeyError(`Author "${data.authorId}" does not exist`)
+      if (isPrismaError(e, 'P2002')) throw new ConflictError(`Slug "${data.slug}" is already taken`)
+      if (isPrismaError(e, 'P2007'))
+        throw new BadRequestError('Invalid value format for field in post')
+      throw e
+    }
   }
 
   update(id: string, data: UpdatePostInput): Promise<Post> {
-    const { tagSlugs, ...rest } = data
-    return this.db.post.update({
-      where: { id },
-      data: {
-        ...rest,
-        ...(tagSlugs
-          ? {
-              postTags: {
-                deleteMany: {},
-                create: tagSlugs.map((slug) => ({ tag: { connect: { slug } } })),
-              },
-            }
-          : {}),
-      },
-    })
+    return this.db.post.update({ where: { id }, data })
   }
 
   async delete(id: string): Promise<void> {

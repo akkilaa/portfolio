@@ -47,6 +47,10 @@ export class InMemoryPostRepository implements IPostRepository {
     }
   }
 
+  async slugExists(slug: string): Promise<boolean> {
+    return [...this.store.values()].some((p) => p.slug === slug)
+  }
+
   async findBySlug(slug: string): Promise<PostWithTags | null> {
     const post = [...this.store.values()].find((p) => p.slug === slug && p.deletedAt === null)
     return post ? { ...post, tags: [] } : null
