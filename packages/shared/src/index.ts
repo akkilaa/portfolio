@@ -11,6 +11,14 @@ export {
 
 export type { PaginatedQuery, PostsQuery, AdminPostsQuery } from './http'
 
+export type {
+  PostResponse,
+  PostDetailResponse,
+  PostListItemResponse,
+  PostListResponse,
+  AdminPostListResponse,
+} from './dtos/post.dto'
+
 export type { Expand } from './helper-types'
 
 export type { User, UserRole, CreateUserInput, UpdateUserInput } from './domain/user'
