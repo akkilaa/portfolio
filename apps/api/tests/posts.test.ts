@@ -4,7 +4,7 @@ import { composeApp } from '../src/container'
 import { PostsService } from '../src/services/posts.service'
 import { PostsController } from '../src//controllers/posts.controller'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
-import { publishedPost, draftPost, deletedPost } from './fixtures/posts.fixtures'
+import { publishedPostInput, draftPostInput, deletedPostInput } from './fixtures/posts.fixtures'
 
 let repo: InMemoryPostRepository
 
@@ -16,19 +16,25 @@ function app() {
   return composeApp({ posts: new PostsController(new PostsService(repo)) })
 }
 
-describe('GET /v1/posts', () => {
-  it('returns only published posts', async () => {
-    repo.seed([publishedPost, draftPost, deletedPost])
+describe('Public post listing', () => {
+  it('given published, draft, and deleted posts exist, only the published one should be visible', async () => {
+    const published = await repo.create(publishedPostInput)
+    await repo.publish(published.id)
+    await repo.create(draftPostInput)
+    const deleted = await repo.create(deletedPostInput)
+    await repo.delete(deleted.id)
 
     const res = await request(app()).get('/v1/posts')
 
     expect(res.status).toBe(200)
     expect(res.body.items).toHaveLength(1)
-    expect(res.body.items[0].slug).toBe(publishedPost.slug)
+    expect(res.body.items[0].slug).toBe(publishedPostInput.slug)
   })
 
-  it('returns empty list when no posts are published', async () => {
-    repo.seed([draftPost, deletedPost])
+  it('given no published posts exist, the listing should be empty with no next page', async () => {
+    await repo.create(draftPostInput)
+    const deleted = await repo.create(deletedPostInput)
+    await repo.delete(deleted.id)
 
     const res = await request(app()).get('/v1/posts')
 
@@ -37,12 +43,11 @@ describe('GET /v1/posts', () => {
     expect(res.body.nextCursor).toBeNull()
   })
 
-  it('paginates with limit and returns nextCursor', async () => {
-    repo.seed([
-      { ...publishedPost, id: '1', slug: 'post-1' },
-      { ...publishedPost, id: '2', slug: 'post-2' },
-      { ...publishedPost, id: '3', slug: 'post-3' },
-    ])
+  it('given more posts than the requested page size, a cursor to load the next page should be returned', async () => {
+    for (const slug of ['post-1', 'post-2', 'post-3']) {
+      const post = await repo.create({ ...publishedPostInput, slug })
+      await repo.publish(post.id)
+    }
 
     const res = await request(app()).get('/v1/posts?limit=2')
 
@@ -51,34 +56,36 @@ describe('GET /v1/posts', () => {
   })
 })
 
-describe('GET /v1/posts/:slug', () => {
-  it('returns a published post by slug', async () => {
-    repo.seed([publishedPost])
+describe('Reading a post by its slug', () => {
+  it('given a valid published slug, the full post content should be returned', async () => {
+    const post = await repo.create(publishedPostInput)
+    await repo.publish(post.id)
 
-    const res = await request(app()).get(`/v1/posts/${publishedPost.slug}`)
+    const res = await request(app()).get(`/v1/posts/${publishedPostInput.slug}`)
 
     expect(res.status).toBe(200)
-    expect(res.body.slug).toBe(publishedPost.slug)
-    expect(res.body.title).toBe(publishedPost.title)
+    expect(res.body.slug).toBe(publishedPostInput.slug)
+    expect(res.body.title).toBe(publishedPostInput.title)
   })
 
-  it('returns 404 for a slug that does not exist', async () => {
+  it('given a slug that does not match any post, a not-found response should be returned', async () => {
     const res = await request(app()).get('/v1/posts/non-existent')
 
     expect(res.status).toBe(404)
   })
 
-  it('returns 404 for a deleted post', async () => {
-    repo.seed([deletedPost])
+  it('given a deleted post, its slug should no longer return any content', async () => {
+    const post = await repo.create(deletedPostInput)
+    await repo.delete(post.id)
 
-    const res = await request(app()).get(`/v1/posts/${deletedPost.slug}`)
+    const res = await request(app()).get(`/v1/posts/${deletedPostInput.slug}`)
 
     expect(res.status).toBe(404)
   })
 })
 
-describe('POST /v1/posts', () => {
-  it('creates a post in draft state', async () => {
+describe('Creating a post', () => {
+  it('a newly created post should start as a draft with no publication date', async () => {
     const res = await request(app())
       .post('/v1/posts')
       .send({
@@ -94,7 +101,7 @@ describe('POST /v1/posts', () => {
     expect(res.body.publishedAt).toBeNull()
   })
 
-  it('created post does not appear in public listing until published', async () => {
+  it('a draft post should not appear in the public listing until it is published', async () => {
     await request(app())
       .post('/v1/posts')
       .send({
@@ -111,30 +118,33 @@ describe('POST /v1/posts', () => {
   })
 })
 
-describe('PATCH /v1/posts/:id/publish', () => {
-  it('publishes a draft post', async () => {
-    repo.seed([draftPost])
+describe('Publishing a post', () => {
+  it('given an existing draft post, publishing it should set a publication date', async () => {
+    const draft = await repo.create(draftPostInput)
 
-    const res = await request(app()).patch(`/v1/posts/${draftPost.id}/publish`)
+    const res = await request(app()).patch(`/v1/posts/${draft.id}/publish`)
 
     expect(res.status).toBe(200)
     expect(res.body.publishedAt).not.toBeNull()
   })
 
-  it('published post appears in public listing', async () => {
-    repo.seed([draftPost])
-    await request(app()).patch(`/v1/posts/${draftPost.id}/publish`)
+  it('given an existing draft post, publishing it should make it immediately visible in the public listing', async () => {
+    const draft = await repo.create(draftPostInput)
+    await request(app()).patch(`/v1/posts/${draft.id}/publish`)
 
     const res = await request(app()).get('/v1/posts')
 
-    expect(res.body.items.find((p: { slug: string }) => p.slug === draftPost.slug)).toBeDefined()
+    expect(
+      res.body.items.find((p: { slug: string }) => p.slug === draftPostInput.slug),
+    ).toBeDefined()
   })
 })
 
-describe('PATCH /v1/posts/:id/unpublish', () => {
-  it('hides a published post from public listing', async () => {
-    repo.seed([publishedPost])
-    await request(app()).patch(`/v1/posts/${publishedPost.id}/unpublish`)
+describe('Unpublishing a post', () => {
+  it('given an existing published post, unpublishing it should immediately hide it from the public listing', async () => {
+    const post = await repo.create(publishedPostInput)
+    await repo.publish(post.id)
+    await request(app()).patch(`/v1/posts/${post.id}/unpublish`)
 
     const res = await request(app()).get('/v1/posts')
 
@@ -142,20 +152,22 @@ describe('PATCH /v1/posts/:id/unpublish', () => {
   })
 })
 
-describe('DELETE /v1/posts/:id', () => {
-  it('soft deletes a post', async () => {
-    repo.seed([publishedPost])
+describe('Deleting a post', () => {
+  it('given an existing published post, deleting it should succeed', async () => {
+    const post = await repo.create(publishedPostInput)
+    await repo.publish(post.id)
 
-    const del = await request(app()).delete(`/v1/posts/${publishedPost.id}`)
+    const del = await request(app()).delete(`/v1/posts/${post.id}`)
 
     expect(del.status).toBe(204)
   })
 
-  it('deleted post no longer accessible by slug', async () => {
-    repo.seed([publishedPost])
-    await request(app()).delete(`/v1/posts/${publishedPost.id}`)
+  it('given a deleted post, its slug should no longer resolve to any content', async () => {
+    const post = await repo.create(publishedPostInput)
+    await repo.publish(post.id)
+    await request(app()).delete(`/v1/posts/${post.id}`)
 
-    const res = await request(app()).get(`/v1/posts/${publishedPost.slug}`)
+    const res = await request(app()).get(`/v1/posts/${publishedPostInput.slug}`)
 
     expect(res.status).toBe(404)
   })
