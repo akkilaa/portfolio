@@ -11,5 +11,6 @@ export function composeApp(controllers: Controllers): Express {
   app.use(express.json())
   app.get('/', (_req, res) => res.json({ status: 'ok' }))
   app.use('/v1', createV1Router(controllers))
+
   return app
 }
