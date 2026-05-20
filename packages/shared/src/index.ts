@@ -32,6 +32,8 @@ export type {
   AdminProjectListResponse,
 } from './dtos/project.dto'
 
+export type { ContactSubmissionResponse, ContactListResponse } from './dtos/contact.dto'
+
 export type { Expand } from './helper-types'
 
 export type { User, UserRole, CreateUserInput, UpdateUserInput } from './domain/user'

@@ -5,8 +5,11 @@ import { PostsService } from '../src/services/posts.service'
 import { PostsController } from '../src/controllers/posts.controller'
 import { ProjectsService } from '../src/services/projects.service'
 import { ProjectsController } from '../src/controllers/projects.controller'
+import { ContactService } from '../src/services/contact.service'
+import { ContactController } from '../src/controllers/contact.controller'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
 import { InMemoryProjectRepository } from './fakes/InMemoryProjectRepository'
+import { InMemoryContactRepository } from './fakes/InMemoryContactRepository'
 import {
   draftProjectInput,
   publishedProjectInput,
@@ -25,6 +28,7 @@ function app() {
   return composeApp({
     posts: new PostsController(new PostsService(new InMemoryPostRepository())),
     projects: new ProjectsController(new ProjectsService(repo)),
+    contact: new ContactController(new ContactService(new InMemoryContactRepository())),
   })
 }
 

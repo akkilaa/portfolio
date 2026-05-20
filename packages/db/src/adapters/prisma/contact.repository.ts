@@ -5,6 +5,8 @@ import type {
   Paginated,
   PaginationOpts,
 } from '@portfolio/shared'
+import { BadRequestError } from '@portfolio/shared'
+import { isPrismaError } from '../../utils'
 
 export class PrismaContactRepository {
   constructor(private readonly db: PrismaClient) {}
@@ -14,16 +16,21 @@ export class PrismaContactRepository {
   }
 
   async findAll({ limit = 20, cursor }: PaginationOpts): Promise<Paginated<ContactSubmission>> {
-    const rows = await this.db.contactSubmission.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: limit + 1,
-      cursor: cursor ? { id: cursor } : undefined,
-      skip: cursor ? 1 : 0,
-    })
+    try {
+      const rows = await this.db.contactSubmission.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        skip: cursor ? 1 : 0,
+      })
 
-    const hasMore = rows.length > limit
-    const items = hasMore ? rows.slice(0, limit) : rows
-    return { items, nextCursor: hasMore ? items[items.length - 1].id : null }
+      const hasMore = rows.length > limit
+      const items = hasMore ? rows.slice(0, limit) : rows
+      return { items, nextCursor: hasMore ? items[items.length - 1].id : null }
+    } catch (err) {
+      if (isPrismaError(err, 'P2007')) throw new BadRequestError('Invalid cursor')
+      throw err
+    }
   }
 
   findById(id: string): Promise<ContactSubmission | null> {

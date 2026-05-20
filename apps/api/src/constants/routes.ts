@@ -1,6 +1,7 @@
 export const ROUTES = {
   POSTS: '/posts',
   PROJECTS: '/projects',
+  CONTACT: '/contact',
 } as const
 
 export const POST_ROUTES = {
@@ -21,4 +22,10 @@ export const PROJECT_ROUTES = {
   PUBLISH: '/:id/publish',
   UNPUBLISH: '/:id/unpublish',
   RESTORE: '/:id/restore',
+} as const
+
+export const CONTACT_ROUTES = {
+  ROOT: '/',
+  ADMIN: '/admin',
+  BY_ID: '/:id',
 } as const

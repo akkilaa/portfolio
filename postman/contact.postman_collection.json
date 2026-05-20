@@ -1,0 +1,86 @@
+{
+  "info": {
+    "name": "Contact",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "submissionId",
+      "value": "<uuid from a previous response>"
+    },
+    {
+      "key": "cursor",
+      "value": "<nextCursor uuid from a previous list response>"
+    }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Submit contact form",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/v1/contact",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "contact"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@example.com\",\n  \"message\": \"Hello, I would like to get in touch.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List all submissions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/contact/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "contact", "admin"]
+            }
+          }
+        },
+        {
+          "name": "List all submissions (paginated)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/v1/contact/admin?limit=10&cursor={{cursor}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "contact", "admin"],
+              "query": [
+                { "key": "limit", "value": "10" },
+                { "key": "cursor", "value": "{{cursor}}" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete submission",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/v1/contact/{{submissionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["v1", "contact", "{{submissionId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
