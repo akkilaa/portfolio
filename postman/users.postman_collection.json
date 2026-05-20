@@ -1,0 +1,29 @@
+{
+  "info": {
+    "name": "Users",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "userId",
+      "value": "<uuid from database>"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get user by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/v1/users/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["v1", "users", "{{userId}}"]
+        }
+      }
+    }
+  ]
+}

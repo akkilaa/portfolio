@@ -1,11 +1,18 @@
 import type { PrismaClient } from '../../../prisma/src/generated/prisma'
 import type { User, CreateUserInput, UpdateUserInput } from '@portfolio/shared'
+import { BadRequestError } from '@portfolio/shared'
+import { isPrismaError } from '../../utils'
 
 export class PrismaUserRepository {
   constructor(private readonly db: PrismaClient) {}
 
-  findById(id: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { id } })
+  async findById(id: string): Promise<User | null> {
+    try {
+      return await this.db.user.findUnique({ where: { id } })
+    } catch (err) {
+      if (isPrismaError(err, 'P2007')) throw new BadRequestError('Invalid user ID')
+      throw err
+    }
   }
 
   findByEmail(email: string): Promise<User | null> {
@@ -16,8 +23,13 @@ export class PrismaUserRepository {
     return this.db.user.create({ data })
   }
 
-  update(id: string, data: UpdateUserInput): Promise<User> {
-    return this.db.user.update({ where: { id }, data })
+  async update(id: string, data: UpdateUserInput): Promise<User> {
+    try {
+      return await this.db.user.update({ where: { id }, data })
+    } catch (err) {
+      if (isPrismaError(err, 'P2007')) throw new BadRequestError('Invalid user ID')
+      throw err
+    }
   }
 
   async incrementFailedAttempts(id: string): Promise<void> {

@@ -1,7 +1,9 @@
 export const ROUTES = {
+  AUTH: '/auth',
   POSTS: '/posts',
   PROJECTS: '/projects',
   CONTACT: '/contact',
+  USERS: '/users',
 } as const
 
 export const POST_ROUTES = {
@@ -28,4 +30,16 @@ export const CONTACT_ROUTES = {
   ROOT: '/',
   ADMIN: '/admin',
   BY_ID: '/:id',
+} as const
+
+export const USER_ROUTES = {
+  ROOT: '/',
+  BY_ID: '/:id',
+} as const
+
+export const AUTH_ROUTES = {
+  LOGIN: '/login',
+  VERIFY: '/verify',
+  REFRESH: '/refresh',
+  LOGOUT: '/logout',
 } as const

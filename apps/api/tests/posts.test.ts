@@ -7,9 +7,15 @@ import { ProjectsService } from '../src/services/projects.service'
 import { ProjectsController } from '../src/controllers/projects.controller'
 import { ContactService } from '../src/services/contact.service'
 import { ContactController } from '../src/controllers/contact.controller'
+import { UsersService } from '../src/services/users.service'
+import { UsersController } from '../src/controllers/users.controller'
+import { AuthService } from '../src/services/auth.service'
+import { AuthController } from '../src/controllers/auth.controller'
+import { InMemoryEmailService } from './fakes/InMemoryEmailService'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
 import { InMemoryProjectRepository } from './fakes/InMemoryProjectRepository'
 import { InMemoryContactRepository } from './fakes/InMemoryContactRepository'
+import { InMemoryUserRepository } from './fakes/InMemoryUserRepository'
 import { publishedPostInput, draftPostInput, deletedPostInput } from './fixtures/posts.fixtures'
 import type { CreatePostInput } from '@portfolio/shared'
 
@@ -24,6 +30,10 @@ function app() {
     posts: new PostsController(new PostsService(repo)),
     projects: new ProjectsController(new ProjectsService(new InMemoryProjectRepository())),
     contact: new ContactController(new ContactService(new InMemoryContactRepository())),
+    users: new UsersController(new UsersService(new InMemoryUserRepository())),
+    auth: new AuthController(
+      new AuthService(new InMemoryUserRepository(), new InMemoryEmailService()),
+    ),
   })
 }
 
