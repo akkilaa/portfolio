@@ -1,0 +1,39 @@
+import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+
+const fieldCls = 'mb-[18px]'
+
+const labelCls =
+  'block font-[family-name:var(--font-mono)] text-[11px] tracking-[0.06em] text-[var(--text-dim)] mb-1.5'
+
+const inputCls =
+  'w-full bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg py-[11px] px-[14px] font-[family-name:var(--font-sans)] text-[14px] text-[var(--text-bright)] transition-[border-color] duration-150 focus:outline-none focus:border-[var(--accent)]'
+
+interface LabelProps extends ComponentPropsWithoutRef<'label'> {
+  required?: boolean
+  children: ReactNode
+}
+
+const Field = ({ children, className = '', ...props }: ComponentPropsWithoutRef<'div'>) => (
+  <div className={`${fieldCls} ${className}`} {...props}>
+    {children}
+  </div>
+)
+
+const Label = ({ required, children, className = '', ...props }: LabelProps) => (
+  <label className={`${labelCls} ${className}`} {...props}>
+    {children}
+    {required && <span className="text-[var(--accent)] ml-1">*</span>}
+  </label>
+)
+
+const Text = ({ className = '', ...props }: ComponentPropsWithoutRef<'input'>) => (
+  <input className={`${inputCls} ${className}`} {...props} />
+)
+
+const Textarea = ({ className = '', ...props }: ComponentPropsWithoutRef<'textarea'>) => (
+  <textarea className={`${inputCls} resize-y min-h-[110px] ${className}`} {...props} />
+)
+
+const Input = { Field, Label, Text, Textarea }
+
+export default Input

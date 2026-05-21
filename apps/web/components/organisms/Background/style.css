@@ -1,0 +1,47 @@
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: -1px -1px;
+}
+
+.bg-dots-base {
+  background-image: radial-gradient(circle, var(--dot-base) 1px, transparent 1.4px);
+  background-size: 24px 24px;
+}
+
+.bg-dots-torch {
+  background-image: radial-gradient(circle, var(--dot-bright) 1.4px, transparent 1.8px);
+  background-size: 24px 24px;
+  opacity: 0.95;
+  -webkit-mask-image: radial-gradient(
+    circle var(--torch-radius) at var(--mx) var(--my),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.65) 35%,
+    rgba(0, 0, 0, 0) 75%
+  );
+  mask-image: radial-gradient(
+    circle var(--torch-radius) at var(--mx) var(--my),
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.65) 35%,
+    rgba(0, 0, 0, 0) 75%
+  );
+  transition: opacity 250ms ease;
+}
+
+.bg-vignette {
+  background: radial-gradient(ellipse at top, transparent 0%, var(--bg) 75%);
+  opacity: 0.6;
+}
+
+[data-theme='light'] .bg-vignette {
+  opacity: 0.3;
+}
