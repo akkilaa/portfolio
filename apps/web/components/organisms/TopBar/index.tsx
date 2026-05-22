@@ -17,8 +17,8 @@ const sectionIds = ['top', 'projects', 'contact']
 const navItems = [
   { id: 'top', href: '/#top', label: 'home' },
   { id: 'projects', href: '/#projects', label: 'projects' },
-  { id: 'blog', href: '/blog', label: 'blog' },
   { id: 'contact', href: '/#contact', label: 'contact' },
+  { id: 'blog', href: '/blog', label: 'blog' },
 ]
 
 const TopBar = () => {

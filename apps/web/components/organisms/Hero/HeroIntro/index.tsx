@@ -17,7 +17,7 @@ const HeroIntro = () => (
       leadingDollar
       title={
         <>
-          hi, I&apos;m <span className="text-[var(--accent)]">akkila</span>
+          hi, I&apos;m <span className="text-[var(--accent)]">Aleksa</span>
         </>
       }
       middle="Full-Stack Developer | AI Engineer | Belgrade ↔ Remote"
@@ -40,13 +40,13 @@ const HeroIntro = () => (
       </Button>
       <div className="ml-auto flex gap-2">
         <IconButtonLink
-          href="https://github.com/akkila"
+          href="https://github.com/akkilaa"
           icon={<GithubIcon />}
           label="GitHub"
           external
         />
         <IconButtonLink
-          href="https://linkedin.com/in/akkila"
+          href="https://www.linkedin.com/in/aleksa-janjic"
           icon={<LinkedinIcon />}
           label="LinkedIn"
           external

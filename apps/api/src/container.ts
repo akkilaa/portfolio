@@ -1,5 +1,6 @@
 import express, { type Express } from 'express'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import { createV1Router } from '@api/routes/v1.router'
 import type { AuthController } from '@api/controllers/auth.controller'
 import type { PostsController } from '@api/controllers/posts.controller'
@@ -18,6 +19,16 @@ type Controllers = {
 
 export function composeApp(controllers: Controllers): Express {
   const app = express()
+
+  const corsOrigin =
+    process.env.NODE_ENV !== 'production'
+      ? /^https?:\/\/localhost(:\d+)?$/
+      : process.env.CORS_ORIGIN
+
+  if (corsOrigin) {
+    app.use(cors({ origin: corsOrigin, credentials: true }))
+  }
+
   app.use(express.json())
   app.use(cookieParser())
   app.get('/', (_req, res) => res.json({ status: 'ok' }))

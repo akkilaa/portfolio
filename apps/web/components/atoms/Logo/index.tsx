@@ -1,7 +1,9 @@
+import Link from 'next/link'
+
 const Logo = () => {
   return (
-    <a
-      href="#top"
+    <Link
+      href="/"
       className="flex items-center gap-2.5 font-mono text-[15px] font-semibold tracking-tight text-white no-underline"
     >
       <span
@@ -10,7 +12,7 @@ const Logo = () => {
       />
       <span>akkila</span>
       <span className="font-normal text-[var(--text-dim)]">.dev</span>
-    </a>
+    </Link>
   )
 }
 

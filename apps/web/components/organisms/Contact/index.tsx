@@ -1,36 +1,41 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import SectionHeading from '@/components/molecules/SectionHeading'
 import Button from '@/components/atoms/Button'
 import Input from '@/components/molecules/Input'
-import Link from 'next/link'
+import { submitContact } from '@/lib/contact'
+
+const ERROR_MESSAGES: Record<string, string> = {
+  rate_limited: 'too many requests — wait a moment and try again',
+  validation: 'invalid submission — check your details',
+  server: 'something went wrong — try again',
+}
 
 const Contact = () => {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
     const form = e.currentTarget
-    const data = {
-      name: (form.elements.namedItem('name') as HTMLInputElement).value,
-      email: (form.elements.namedItem('email') as HTMLInputElement).value,
-      message: (form.elements.namedItem('msg') as HTMLTextAreaElement).value,
-    }
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
-      await fetch(`${apiUrl}/v1/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+      await submitContact({
+        name: (form.elements.namedItem('name') as HTMLInputElement).value,
+        email: (form.elements.namedItem('email') as HTMLInputElement).value,
+        message: (form.elements.namedItem('msg') as HTMLTextAreaElement).value,
       })
-    } catch {
-      // fail silently — still show success to avoid leaking errors
+      setSent(true)
+    } catch (err) {
+      const key = err instanceof Error ? err.message : 'server'
+      setError(ERROR_MESSAGES[key] ?? ERROR_MESSAGES.server)
+    } finally {
+      setLoading(false)
     }
-    setSent(true)
-    setLoading(false)
   }
 
   return (
@@ -118,9 +123,14 @@ const Contact = () => {
             </Button>
           </div>
           {sent && (
-            <div className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--accent)] mt-2 flex items-center gap-1.5">
+            <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--accent)] mt-3 flex items-center gap-1.5">
               ● message queued — you&apos;ll hear back within 24h.
-            </div>
+            </p>
+          )}
+          {error && (
+            <p className="font-[family-name:var(--font-mono)] text-[12px] text-red-400 mt-3 flex items-center gap-1.5">
+              ✕ {error}
+            </p>
           )}
         </form>
       </div>
