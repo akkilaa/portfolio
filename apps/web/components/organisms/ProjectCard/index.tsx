@@ -4,6 +4,7 @@ import Button from '@/components/atoms/Button'
 
 export interface ProjectData {
   num: string
+  slug: string
   title: string
   year: string
   role: string
@@ -14,7 +15,12 @@ export interface ProjectData {
 }
 
 const ProjectCard = ({ project }: { project: ProjectData }) => (
-  <article className="relative flex flex-col border border-[var(--border)] rounded-xl bg-[var(--surface)] p-[22px] min-h-[320px] overflow-hidden transition-[border-color,transform] duration-200 hover:border-[var(--accent)] hover:-translate-y-0.5 after:content-[''] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_100%_0%,var(--accent-dim),transparent_60%)] after:opacity-0 after:transition-opacity after:duration-[250ms] after:pointer-events-none hover:after:opacity-100">
+  <article className="relative flex flex-col border border-[var(--border)] rounded-xl bg-[var(--surface)] p-[22px] min-h-[320px] overflow-hidden cursor-pointer transition-[border-color,transform] duration-200 hover:border-[var(--accent)] hover:-translate-y-0.5 after:content-[''] after:absolute after:inset-0 after:rounded-[inherit] after:bg-[radial-gradient(circle_at_100%_0%,var(--accent-dim),transparent_60%)] after:opacity-0 after:transition-opacity after:duration-[250ms] after:pointer-events-none hover:after:opacity-100">
+    <Link
+      href={`/project/${project.slug}`}
+      className="absolute inset-0 z-0"
+      aria-label={project.title}
+    />
     <div className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--accent)] tracking-[0.08em]">
       [{project.num}]
     </div>
@@ -36,7 +42,7 @@ const ProjectCard = ({ project }: { project: ProjectData }) => (
     </div>
     <div className="flex gap-3.5 pt-3.5 border-t border-dashed border-[var(--border)]">
       {project.links.map((l) => (
-        <Button key={l.label} as={Link} href={l.href} variant="plain">
+        <Button key={l.label} as={Link} href={l.href} variant="plain" className="relative z-[1]">
           ↗ {l.label}
         </Button>
       ))}

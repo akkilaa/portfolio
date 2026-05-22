@@ -1,68 +1,65 @@
+import Link from 'next/link'
 import ProjectCard, { type ProjectData } from '@/components/organisms/ProjectCard'
 import SectionHeading from '@/components/molecules/SectionHeading'
+import Button from '@/components/atoms/Button'
+import { getFeaturedProjects, type ProjectDetailResponse } from '@/lib/projects'
 
-const PROJECTS: ProjectData[] = [
-  {
-    num: '01',
-    title: 'akkila.dev',
-    year: '2026',
-    role: 'solo · ongoing',
-    desc: "A self-hosted fullstack portfolio with magic-link admin, MDX blog, and an embedded local LLM for visitor Q&A. The site you're reading.",
-    tags: ['Next.js', 'Postgres', 'Prisma', 'Local LLM'],
-    links: [
-      { label: 'live', href: 'https://akkila.dev' },
-      { label: 'repo', href: 'https://github.com/akkila' },
-    ],
-    litTags: [3],
-  },
-  {
-    num: '02',
-    title: 'lumen-rag',
-    year: '2025',
-    role: 'open source',
-    desc: 'A retrieval-augmented chat layer over your own markdown notes. Streams ≥ 30 tok/s on a single GPU, with prompt-injection guardrails baked in.',
-    tags: ['Python', 'pgvector', 'Llama 3', 'FastAPI'],
-    links: [
-      { label: 'repo', href: '#' },
-      { label: 'demo', href: '#' },
-    ],
-    litTags: [2, 3],
-  },
-  {
-    num: '03',
-    title: 'tinytrack',
-    year: '2025',
-    role: 'client work',
-    desc: 'Privacy-first analytics for indie SaaS — < 2KB script, no cookies, plausible-compatible export. Powers ~40k events/day on a $5 VPS.',
-    tags: ['TypeScript', 'Express', 'ClickHouse'],
-    links: [
-      { label: 'live', href: '#' },
-      { label: 'case study', href: '#' },
-    ],
+function toProjectData(project: ProjectDetailResponse, index: number): ProjectData {
+  const year = project.startedAt
+    ? new Date(project.startedAt).getFullYear().toString()
+    : new Date(project.createdAt).getFullYear().toString()
+
+  const links: { label: string; href: string }[] = []
+  if (project.liveUrl) links.push({ label: 'live', href: project.liveUrl })
+  if (project.repoUrl) links.push({ label: 'repo', href: project.repoUrl })
+
+  return {
+    num: String(index + 1).padStart(2, '0'),
+    slug: project.slug,
+    title: project.title,
+    year,
+    role: project.role ?? '',
+    desc: project.shortDescription,
+    tags: project.tags.map((t) => t.label),
+    links,
     litTags: [0],
-  },
-]
+  }
+}
 
-const Projects = () => (
-  <section className="relative py-20" id="projects">
-    <SectionHeading
-      num="02"
-      label="FEATURED WORK"
-      title="Selected projects"
-      aside={
-        <>
-          ~/projects/featured
-          <br />
-          <span style={{ color: 'var(--text-faint)' }}>3 of 12 visible</span>
-        </>
-      }
-    />
-    <div className="grid grid-cols-3 gap-[18px] max-[940px]:grid-cols-1">
-      {PROJECTS.map((p) => (
-        <ProjectCard key={p.num} project={p} />
-      ))}
-    </div>
-  </section>
-)
+const Projects = async () => {
+  const featured = await getFeaturedProjects()
+
+  return (
+    <section className="relative py-20" id="projects">
+      <SectionHeading
+        num="02"
+        label="FEATURED WORK"
+        title="Selected projects"
+        aside={
+          <>
+            ~/projects/featured
+            <br />
+            <span style={{ color: 'var(--text-faint)' }}>{featured.length} of 12 visible</span>
+          </>
+        }
+      />
+      <div className="grid grid-cols-3 gap-[18px] max-[940px]:grid-cols-1">
+        {featured.map((p, i) => (
+          <ProjectCard key={p.id} project={toProjectData(p, i)} />
+        ))}
+      </div>
+
+      <div className="mt-10 pt-7 border-t border-dashed border-[var(--border)] flex items-center justify-between gap-6 flex-wrap">
+        <span className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--text-dim)]">
+          <span className="text-[var(--text-faint)]">$ </span>ls -al /projects
+          <span className="text-[var(--text-faint)] ml-3 text-[11.5px]">// list all projects</span>
+        </span>
+        <Button as={Link} href="/projects">
+          view all
+        </Button>
+      </div>
+    </section>
+  )
+}
 
 export default Projects

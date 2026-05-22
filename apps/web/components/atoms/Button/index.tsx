@@ -25,10 +25,14 @@ const Button = <T extends ElementType = 'button'>({
   as,
   variant = 'default',
   children,
+  className,
   ...props
-}: ButtonProps<T>) => {
+}: ButtonProps<T> & { className?: string }) => {
   const Component = (as ?? 'button') as ElementType
-  const cls = variant === 'bare' ? '' : `${base} ${variants[variant]}`
+  const cls =
+    variant === 'bare'
+      ? (className ?? '')
+      : [base, variants[variant], className].filter(Boolean).join(' ')
   return (
     <Component className={cls} {...props}>
       {children}
