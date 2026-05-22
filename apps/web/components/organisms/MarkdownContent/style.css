@@ -1,0 +1,157 @@
+/* ==== post prose ==== */
+.post-prose {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--text);
+  max-width: 70ch;
+}
+.post-prose > * + * {
+  margin-top: 1.2em;
+}
+.post-prose p {
+  text-wrap: pretty;
+  margin: 0;
+}
+.post-prose strong {
+  color: var(--text-bright);
+  font-weight: 600;
+}
+.post-prose em {
+  color: var(--accent);
+  font-style: italic;
+}
+.post-prose a {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent);
+  transition: border-color 150ms;
+}
+.post-prose a:hover {
+  border-bottom-color: var(--accent);
+}
+.post-prose h2 {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--text-bright);
+  margin-top: 2.4em;
+  margin-bottom: 0.6em;
+  scroll-margin-top: 100px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.post-prose h2::before {
+  content: '##';
+  color: var(--accent);
+  font-size: 0.7em;
+  opacity: 0.7;
+}
+.post-prose h3 {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--text-bright);
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  scroll-margin-top: 100px;
+}
+.post-prose h3::before {
+  content: '### ';
+  color: var(--accent);
+  opacity: 0.6;
+}
+.post-prose ul,
+.post-prose ol {
+  padding-left: 1.4em;
+  margin-left: 0;
+}
+.post-prose ul {
+  list-style-type: disc;
+}
+.post-prose ol {
+  list-style-type: decimal;
+}
+.post-prose li {
+  margin-top: 0.4em;
+}
+.post-prose ul li::marker {
+  color: var(--accent);
+}
+.post-prose ol li::marker {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+.post-prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 14px 18px;
+  margin: 1.4em 0;
+  color: var(--text);
+  font-style: italic;
+  background: var(--accent-dim);
+  border-radius: 0 8px 8px 0;
+}
+.post-prose blockquote p {
+  margin: 0;
+}
+.post-prose code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 2px 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* callout */
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  background: var(--accent-dim);
+  border-radius: 10px;
+  margin: 1.6em 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.callout::before {
+  content: '›';
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.5;
+}
+.callout p {
+  margin: 0;
+}
+
+/* code block syntax tokens */
+.tok-key {
+  color: #ff79c6;
+}
+.tok-str {
+  color: #f1fa8c;
+}
+.tok-num {
+  color: #bd93f9;
+}
+.tok-fn {
+  color: var(--accent);
+}
+.tok-com {
+  color: #5a6168;
+  font-style: italic;
+}
+.tok-typ {
+  color: #8be9fd;
+}
+.tok-pun {
+  color: #888;
+}

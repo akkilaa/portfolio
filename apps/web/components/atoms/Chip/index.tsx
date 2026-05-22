@@ -1,18 +1,30 @@
 'use client'
 
-interface ChipProps {
+import type { ComponentPropsWithoutRef } from 'react'
+
+interface ChipProps extends ComponentPropsWithoutRef<'button'> {
   label: string
-  onClick: () => void
-  disabled?: boolean
+  highlighted?: boolean
+  count?: number
 }
 
-const Chip = ({ label, onClick, disabled = false }: ChipProps) => (
+const Chip = ({ label, highlighted = false, count, className = '', ...props }: ChipProps) => (
   <button
-    className="font-[family-name:var(--font-mono)] text-[11.5px] py-1.5 px-2.5 border border-[var(--border)] rounded-full text-[var(--text-dim)] bg-[var(--surface-2)] transition-[border-color,color] duration-150 whitespace-nowrap hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-40 disabled:cursor-not-allowed"
-    onClick={onClick}
-    disabled={disabled}
+    className={`font-[family-name:var(--font-mono)] text-[11.5px] py-1.5 px-2.5 border rounded-full whitespace-nowrap transition-[border-color,color,background] duration-150 disabled:opacity-40 disabled:cursor-not-allowed ${
+      highlighted
+        ? 'text-[var(--accent)] border-[var(--accent)] bg-[var(--accent-dim)]'
+        : 'text-[var(--text-dim)] border-[var(--border)] bg-[var(--surface-2)] hover:text-[var(--accent)] hover:border-[var(--accent)]'
+    } ${className}`}
+    {...props}
   >
     {label}
+    {count !== undefined && (
+      <span
+        className={`ml-1.5 ${highlighted ? 'text-[var(--accent)] opacity-70' : 'text-[var(--text-faint)]'}`}
+      >
+        {count}
+      </span>
+    )}
   </button>
 )
 

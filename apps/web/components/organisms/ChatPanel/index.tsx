@@ -3,6 +3,7 @@
 import './styles.css'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Blip from '@/components/atoms/Blip'
+import Button from '@/components/atoms/Button'
 import Chip from '@/components/atoms/Chip'
 import ChatMessage, { TypingMessage, type Message } from '@/components/molecules/ChatMessage'
 
@@ -100,7 +101,14 @@ const ChatPanel = () => {
 
       <div className="flex flex-wrap gap-1.5 pt-2.5 pb-3 border-t border-dashed border-[var(--border)]">
         {SUGGESTIONS.map((s) => (
-          <Chip key={s} label={s} onClick={() => send(s)} disabled={busy} />
+          <Button
+            key={s}
+            as={Chip}
+            variant="bare"
+            label={s}
+            onClick={() => send(s)}
+            disabled={busy}
+          />
         ))}
       </div>
 

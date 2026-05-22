@@ -1,7 +1,7 @@
 import type { ElementType, ComponentPropsWithoutRef, ReactNode } from 'react'
 
 type ButtonOwnProps = {
-  variant?: 'default' | 'primary' | 'icon' | 'plain'
+  variant?: 'default' | 'primary' | 'icon' | 'plain' | 'bare'
   children?: ReactNode
 }
 
@@ -28,8 +28,9 @@ const Button = <T extends ElementType = 'button'>({
   ...props
 }: ButtonProps<T>) => {
   const Component = (as ?? 'button') as ElementType
+  const cls = variant === 'bare' ? '' : `${base} ${variants[variant]}`
   return (
-    <Component className={`${base} ${variants[variant]}`} {...props}>
+    <Component className={cls} {...props}>
       {children}
     </Component>
   )

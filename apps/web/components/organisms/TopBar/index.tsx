@@ -4,6 +4,7 @@ import './styles.css'
 import ThemeToggle from '@/components/atoms/ThemeToggle'
 import Logo from '@/components/atoms/Logo'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import useHighlightActiveSection from '@/hooks/useHighlightActiveSection'
 
 const baseLink =
@@ -11,23 +12,32 @@ const baseLink =
 const dimLink = `${baseLink} text-[var(--text-dim)]`
 const activeLink = `${baseLink} text-[var(--accent)]`
 
-const sections = [
-  { id: 'top', href: '#top', label: 'home' },
-  { id: 'projects', href: '#projects', label: 'projects' },
-  { id: 'contact', href: '#contact', label: 'contact' },
+const sectionIds = ['top', 'projects', 'contact']
+
+const navItems = [
+  { id: 'top', href: '/#top', label: 'home' },
+  { id: 'projects', href: '/#projects', label: 'projects' },
+  { id: 'blog', href: '/blog', label: 'blog' },
+  { id: 'contact', href: '/#contact', label: 'contact' },
 ]
-const sectionIds = sections.map((s) => s.id)
 
 const TopBar = () => {
-  const active = useHighlightActiveSection(sectionIds)
+  const pathname = usePathname()
+  const onBlog = pathname.startsWith('/blog')
+  const sectionActive = useHighlightActiveSection(onBlog ? [] : sectionIds)
+
+  const isActive = (id: string) => {
+    if (id === 'blog') return onBlog
+    return !onBlog && sectionActive === id
+  }
 
   return (
     <header className="topbar sticky top-0 z-50 backdrop-blur-[12px] border-b border-[var(--border)]">
       <div className="max-w-[1200px] mx-auto px-8 py-4 flex items-center justify-between gap-6">
         <Logo />
         <nav className="flex gap-1 items-center" aria-label="Primary">
-          {sections.map(({ id, href, label }) => (
-            <Link key={id} href={href} className={active === id ? activeLink : dimLink}>
+          {navItems.map(({ id, href, label }) => (
+            <Link key={id} href={href} className={isActive(id) ? activeLink : dimLink}>
               {label}
             </Link>
           ))}

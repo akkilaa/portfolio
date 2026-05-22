@@ -8,7 +8,8 @@ const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

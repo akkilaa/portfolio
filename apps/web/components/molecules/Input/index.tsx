@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 
 const fieldCls = 'mb-[18px]'
 
@@ -11,6 +11,11 @@ const inputCls =
 interface LabelProps extends ComponentPropsWithoutRef<'label'> {
   required?: boolean
   children: ReactNode
+}
+
+interface TextProps extends ComponentPropsWithoutRef<'input'> {
+  left?: ReactNode
+  right?: ReactNode
 }
 
 const Field = ({ children, className = '', ...props }: ComponentPropsWithoutRef<'div'>) => (
@@ -26,9 +31,26 @@ const Label = ({ required, children, className = '', ...props }: LabelProps) => 
   </label>
 )
 
-const Text = ({ className = '', ...props }: ComponentPropsWithoutRef<'input'>) => (
-  <input className={`${inputCls} ${className}`} {...props} />
+const Text = forwardRef<HTMLInputElement, TextProps>(
+  ({ left, right, className = '', ...props }, ref) => {
+    if (left || right) {
+      return (
+        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-[10px] transition-[border-color] duration-150 focus-within:border-[var(--accent)]">
+          {left}
+          <input
+            ref={ref}
+            className={`flex-1 font-[family-name:var(--font-mono)] text-[13px] text-[var(--text-bright)] bg-transparent border-none outline-none placeholder:text-[var(--text-faint)] ${className}`}
+            {...props}
+          />
+          {right}
+        </div>
+      )
+    }
+
+    return <input ref={ref} className={`${inputCls} ${className}`} {...props} />
+  },
 )
+Text.displayName = 'Input.Text'
 
 const Textarea = ({ className = '', ...props }: ComponentPropsWithoutRef<'textarea'>) => (
   <textarea className={`${inputCls} resize-y min-h-[110px] ${className}`} {...props} />
