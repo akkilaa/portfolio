@@ -70,6 +70,16 @@ export type {
   CreateRecommendationInput,
 } from './domain/recommendation'
 
+export type {
+  RecommendationAuthorResponse,
+  RecommendationResponse,
+  RecommendationListResponse,
+  AdminRecommendationListResponse,
+  AdminRecommendationQuery,
+  CreateRecommendationBody,
+  RecommendationMeResponse,
+} from './dtos/recommendation.dto'
+
 export type { AuditLog, CreateAuditLogInput } from './domain/audit-log'
 
 export type { LlmChatLog, CreateLlmChatLogInput } from './domain/llm-chat-log'

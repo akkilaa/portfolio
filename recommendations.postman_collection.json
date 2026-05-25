@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "Recommendations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "base", "value": "http://localhost:3001/v1" }],
+  "item": [
+    {
+      "name": "OAuth",
+      "item": [
+        {
+          "name": "Initiate GitHub OAuth",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/github",
+              "host": ["{{base}}"],
+              "path": ["auth", "github"]
+            },
+            "description": "Open in browser — sets oauth_state cookie and redirects to GitHub. After auth, GitHub redirects to /auth/github/callback which sets authorToken cookie and redirects to http://localhost:3000/recommendations."
+          }
+        },
+        {
+          "name": "GitHub Callback (manual)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/auth/github/callback?code=GITHUB_CODE&state=OAUTH_STATE",
+              "host": ["{{base}}"],
+              "path": ["auth", "github", "callback"],
+              "query": [
+                { "key": "code", "value": "GITHUB_CODE" },
+                { "key": "state", "value": "OAUTH_STATE" }
+              ]
+            },
+            "description": "Handled automatically by GitHub redirect. Use this only to inspect the flow manually."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "List Approved Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations",
+              "host": ["{{base}}"],
+              "path": ["recommendations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Author (requires authorToken cookie)",
+      "item": [
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/me",
+              "host": ["{{base}}"],
+              "path": ["recommendations", "me"]
+            },
+            "description": "Returns current author profile + their existing recommendation (if any). 401 if not authenticated."
+          }
+        },
+        {
+          "name": "Submit Recommendation",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Aleksa is a thoughtful engineer who delivers clean, well-structured code and communicates clearly throughout the process.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base}}/recommendations",
+              "host": ["{{base}}"],
+              "path": ["recommendations"]
+            },
+            "description": "One recommendation per author. Returns 409 if already submitted."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (requires accessToken cookie)",
+      "item": [
+        {
+          "name": "List All Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/admin",
+              "host": ["{{base}}"],
+              "path": ["recommendations", "admin"],
+              "query": [
+                { "key": "status", "value": "PENDING", "disabled": true },
+                { "key": "status", "value": "APPROVED", "disabled": true },
+                { "key": "status", "value": "REJECTED", "disabled": true }
+              ]
+            },
+            "description": "Optional ?status=PENDING|APPROVED|REJECTED filter."
+          }
+        },
+        {
+          "name": "Get Recommendation by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/:id",
+              "host": ["{{base}}"],
+              "path": ["recommendations", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          }
+        },
+        {
+          "name": "Approve Recommendation",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/:id/approve",
+              "host": ["{{base}}"],
+              "path": ["recommendations", ":id", "approve"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          }
+        },
+        {
+          "name": "Reject Recommendation",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/:id/reject",
+              "host": ["{{base}}"],
+              "path": ["recommendations", ":id", "reject"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Recommendation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/recommendations/:id",
+              "host": ["{{base}}"],
+              "path": ["recommendations", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

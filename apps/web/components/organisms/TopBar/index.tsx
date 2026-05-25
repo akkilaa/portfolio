@@ -19,16 +19,20 @@ const navItems = [
   { id: 'projects', href: '/#projects', label: 'projects' },
   { id: 'contact', href: '/#contact', label: 'contact' },
   { id: 'blog', href: '/blog', label: 'blog' },
+  { id: 'recommendations', href: '/recommendations', label: 'recommendations' },
 ]
 
 const TopBar = () => {
   const pathname = usePathname()
   const onBlog = pathname.startsWith('/blog')
-  const sectionActive = useHighlightActiveSection(onBlog ? [] : sectionIds)
+  const onRecommendations = pathname.startsWith('/recommendations')
+  const onSubpage = onBlog || onRecommendations
+  const sectionActive = useHighlightActiveSection(onSubpage ? [] : sectionIds)
 
   const isActive = (id: string) => {
     if (id === 'blog') return onBlog
-    return !onBlog && sectionActive === id
+    if (id === 'recommendations') return onRecommendations
+    return !onSubpage && sectionActive === id
   }
 
   return (

@@ -8,8 +8,10 @@ import type {
 } from '@portfolio/shared'
 
 export interface IRecommendationAuthorRepository {
+  findById(id: string): Promise<RecommendationAuthor | null>
   findByProvider(provider: string, providerId: string): Promise<RecommendationAuthor | null>
   upsert(data: UpsertRecommendationAuthorInput): Promise<RecommendationAuthor>
+  updateProfileUrl(id: string, profileUrl: string): Promise<void>
 }
 
 export interface IRecommendationRepository {

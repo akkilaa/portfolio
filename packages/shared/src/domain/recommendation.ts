@@ -9,7 +9,7 @@ export type RecommendationAuthor = {
   displayName: string
   username: string | null
   avatarUrl: string | null
-  profileUrl: string
+  profileUrl: string | null
   createdAt: Date
   updatedAt: Date
 }
@@ -33,7 +33,7 @@ export type UpsertRecommendationAuthorInput = {
   displayName: string
   username?: string
   avatarUrl?: string
-  profileUrl: string
+  profileUrl?: string | null
 }
 
 export type CreateRecommendationInput = {

@@ -13,6 +13,12 @@ const authorInclude = { author: true }
 export class PrismaRecommendationAuthorRepository {
   constructor(private readonly db: PrismaClient) {}
 
+  findById(id: string): Promise<RecommendationAuthor | null> {
+    return this.db.recommendationAuthor.findUnique({
+      where: { id },
+    }) as Promise<RecommendationAuthor | null>
+  }
+
   findByProvider(provider: string, providerId: string): Promise<RecommendationAuthor | null> {
     return this.db.recommendationAuthor.findUnique({
       where: { provider_providerId: { provider, providerId } },
@@ -26,6 +32,10 @@ export class PrismaRecommendationAuthorRepository {
       create: { provider, providerId, ...rest },
       update: { ...rest },
     }) as Promise<RecommendationAuthor>
+  }
+
+  async updateProfileUrl(id: string, profileUrl: string): Promise<void> {
+    await this.db.recommendationAuthor.update({ where: { id }, data: { profileUrl } })
   }
 }
 

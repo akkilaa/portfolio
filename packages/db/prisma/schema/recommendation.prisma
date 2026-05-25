@@ -13,7 +13,7 @@ model RecommendationAuthor {
   displayName String   @map("display_name")
   username    String?
   avatarUrl   String?  @map("avatar_url")
-  profileUrl  String   @map("profile_url")
+  profileUrl  String?  @map("profile_url")
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz
 

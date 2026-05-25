@@ -2,6 +2,8 @@ import { randomBytes } from 'node:crypto'
 import type { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import type { AuthService } from '@api/services/auth.service'
+import type { GithubOAuthService } from '@api/services/github-oauth.service'
+import type { LinkedInOAuthService } from '@api/services/linkedin-oauth.service'
 import type { LoginInput } from '@api/schemas/auth.schema'
 import { BadRequestError } from '@portfolio/shared'
 
@@ -17,7 +19,11 @@ function cookieDefaults() {
 }
 
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  constructor(
+    private readonly service: AuthService,
+    private readonly githubOAuth: GithubOAuthService,
+    private readonly linkedinOAuth: LinkedInOAuthService,
+  ) {}
 
   login = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -101,5 +107,94 @@ export class AuthController {
     res.clearCookie('refreshToken')
     res.clearCookie('csrfToken')
     res.json({ message: 'Logged out' })
+  }
+
+  githubRedirect = (_req: Request, res: Response) => {
+    const state = this.githubOAuth.generateState()
+    // lax required — cookie must survive the cross-site redirect back from GitHub
+    res.cookie('oauth_state', state, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 10 * 60 * 1000,
+    })
+    res.redirect(this.githubOAuth.buildRedirectUrl(state))
+  }
+
+  githubCallback = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { code, state } = req.query
+      const storedState = req.cookies?.oauth_state
+
+      if (!storedState || state !== storedState) {
+        res.status(400).json({ error: 'Invalid OAuth state' })
+        return
+      }
+      if (typeof code !== 'string') {
+        res.status(400).json({ error: 'Missing authorization code' })
+        return
+      }
+
+      res.clearCookie('oauth_state')
+
+      const { authorId } = await this.githubOAuth.exchange(code)
+      const { token, maxAge } = this.githubOAuth.issueAuthorToken(authorId)
+
+      res.cookie('authorToken', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge,
+      })
+
+      const appUrl = process.env.APP_URL ?? 'http://localhost:3000'
+      res.redirect(`${appUrl}/recommendations`)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  linkedinRedirect = (_req: Request, res: Response) => {
+    const state = this.linkedinOAuth.generateState()
+    res.cookie('oauth_state', state, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 10 * 60 * 1000,
+    })
+    res.redirect(this.linkedinOAuth.buildRedirectUrl(state))
+  }
+
+  linkedinCallback = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { code, state } = req.query
+      const storedState = req.cookies?.oauth_state
+
+      if (!storedState || state !== storedState) {
+        res.status(400).json({ error: 'Invalid OAuth state' })
+        return
+      }
+      if (typeof code !== 'string') {
+        res.status(400).json({ error: 'Missing authorization code' })
+        return
+      }
+
+      res.clearCookie('oauth_state')
+
+      const { authorId } = await this.linkedinOAuth.exchange(code)
+      const { token, maxAge } = this.linkedinOAuth.issueAuthorToken(authorId)
+
+      res.cookie('authorToken', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge,
+      })
+
+      const appUrl = process.env.APP_URL ?? 'http://localhost:3000'
+      res.redirect(`${appUrl}/recommendations`)
+    } catch (err) {
+      next(err)
+    }
   }
 }

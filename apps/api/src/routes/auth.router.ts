@@ -14,5 +14,16 @@ export function createAuthRouter(controller: AuthController): Router {
   router.post(AUTH_ROUTES.REFRESH, (req, res, next) => controller.refresh(req, res, next))
   router.post(AUTH_ROUTES.LOGOUT, (req, res, _) => controller.logout(req, res))
 
+  // OAuth callbacks registered before the redirect initiators (more specific path first)
+  router.get(AUTH_ROUTES.GITHUB_CALLBACK, (req, res, next) =>
+    controller.githubCallback(req, res, next),
+  )
+  router.get(AUTH_ROUTES.GITHUB, (req, res) => controller.githubRedirect(req, res))
+
+  router.get(AUTH_ROUTES.LINKEDIN_CALLBACK, (req, res, next) =>
+    controller.linkedinCallback(req, res, next),
+  )
+  router.get(AUTH_ROUTES.LINKEDIN, (req, res) => controller.linkedinRedirect(req, res))
+
   return router
 }

@@ -4,6 +4,7 @@ export const ROUTES = {
   PROJECTS: '/projects',
   CONTACT: '/contact',
   USERS: '/users',
+  RECOMMENDATIONS: '/recommendations',
 } as const
 
 export const POST_ROUTES = {
@@ -42,4 +43,16 @@ export const AUTH_ROUTES = {
   VERIFY: '/verify',
   REFRESH: '/refresh',
   LOGOUT: '/logout',
+  GITHUB: '/github',
+  GITHUB_CALLBACK: '/github/callback',
+  LINKEDIN: '/linkedin',
+  LINKEDIN_CALLBACK: '/linkedin/callback',
+} as const
+
+export const RECOMMENDATION_ROUTES = {
+  ROOT: '/',
+  ADMIN: '/admin',
+  BY_ID: '/:id',
+  APPROVE: '/:id/approve',
+  REJECT: '/:id/reject',
 } as const

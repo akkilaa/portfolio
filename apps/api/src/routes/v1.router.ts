@@ -5,11 +5,13 @@ import { createPostsRouter } from '@api/routes/posts.router'
 import { createProjectsRouter } from '@api/routes/projects.router'
 import { createContactRouter } from '@api/routes/contact.router'
 import { createUsersRouter } from '@api/routes/users.router'
+import { createRecommendationRouter } from '@api/routes/recommendation.router'
 import type { AuthController } from '@api/controllers/auth.controller'
 import type { PostsController } from '@api/controllers/posts.controller'
 import type { ProjectsController } from '@api/controllers/projects.controller'
 import type { ContactController } from '@api/controllers/contact.controller'
 import type { UsersController } from '@api/controllers/users.controller'
+import type { RecommendationController } from '@api/controllers/recommendation.controller'
 
 type V1Controllers = {
   auth: AuthController
@@ -17,6 +19,7 @@ type V1Controllers = {
   projects: ProjectsController
   contact: ContactController
   users: UsersController
+  recommendations: RecommendationController
 }
 
 export function createV1Router(controllers: V1Controllers): Router {
@@ -27,6 +30,7 @@ export function createV1Router(controllers: V1Controllers): Router {
   router.use(ROUTES.PROJECTS, createProjectsRouter(controllers.projects))
   router.use(ROUTES.CONTACT, createContactRouter(controllers.contact))
   router.use(ROUTES.USERS, createUsersRouter(controllers.users))
+  router.use(ROUTES.RECOMMENDATIONS, createRecommendationRouter(controllers.recommendations))
 
   return router
 }

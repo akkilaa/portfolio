@@ -7,6 +7,7 @@ import type { PostsController } from '@api/controllers/posts.controller'
 import type { ProjectsController } from '@api/controllers/projects.controller'
 import type { ContactController } from '@api/controllers/contact.controller'
 import type { UsersController } from '@api/controllers/users.controller'
+import type { RecommendationController } from '@api/controllers/recommendation.controller'
 import { errorHandler } from '@api/middlewares/error-handler'
 
 type Controllers = {
@@ -15,6 +16,7 @@ type Controllers = {
   projects: ProjectsController
   contact: ContactController
   users: UsersController
+  recommendations: RecommendationController
 }
 
 export function composeApp(controllers: Controllers): Express {
