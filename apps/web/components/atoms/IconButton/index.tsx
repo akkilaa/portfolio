@@ -5,12 +5,11 @@ interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string
 }
 
-const IconButton = ({ icon, label, ...props }: IconButtonProps) => (
-  <button
-    className="relative grid place-items-center w-10 h-10 p-0 border border-[var(--border-strong)] rounded-lg text-[var(--text-bright)] bg-[var(--surface)] shrink-0 transition-[border-color,background,transform,color] duration-[180ms] hover:border-[var(--accent)] hover:text-[var(--accent)] active:translate-y-px"
-    aria-label={label}
-    {...props}
-  >
+const BASE =
+  'flex items-center justify-center w-9 h-9 p-0 border border-[var(--border)] rounded-lg text-[var(--text-dim)] shrink-0 transition-[border-color,color] duration-150 hover:border-[var(--accent)] hover:text-[var(--accent)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-50'
+
+const IconButton = ({ icon, label, className, ...props }: IconButtonProps) => (
+  <button className={className ? `${BASE} ${className}` : BASE} aria-label={label} {...props}>
     {icon}
   </button>
 )

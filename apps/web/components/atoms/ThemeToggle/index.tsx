@@ -27,7 +27,6 @@ const ThemeToggle = () => {
     <IconButton
       icon={theme === 'dark' ? <SunIcon /> : <MoonIcon />}
       label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
-      className="grid place-items-center w-9 h-9 border border-[var(--border)] rounded-lg text-[var(--text-dim)] transition-[border-color,color] duration-150 hover:border-[var(--accent)] hover:text-[var(--accent)]"
       onClick={toggle}
     />
   )
