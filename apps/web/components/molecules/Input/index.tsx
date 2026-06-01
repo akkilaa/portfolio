@@ -16,6 +16,18 @@ interface LabelProps extends ComponentPropsWithoutRef<'label'> {
 interface TextProps extends ComponentPropsWithoutRef<'input'> {
   left?: ReactNode
   right?: ReactNode
+  variant?: 'default' | 'chat'
+}
+
+const containerVariants = {
+  default:
+    'flex items-center gap-2.5 px-3.5 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-[10px] transition-[border-color] duration-150 focus-within:border-[var(--accent)]',
+  chat: 'flex items-center gap-2 py-2.5 px-3 bg-[var(--surface-2)] border border-[var(--border)] rounded-[10px] transition-[border-color] duration-150 focus-within:border-[var(--accent)]',
+}
+
+const inputVariants = {
+  default: 'text-[13px]',
+  chat: 'text-[13.5px]',
 }
 
 const Field = ({ children, className = '', ...props }: ComponentPropsWithoutRef<'div'>) => (
@@ -32,14 +44,14 @@ const Label = ({ required, children, className = '', ...props }: LabelProps) => 
 )
 
 const Text = forwardRef<HTMLInputElement, TextProps>(
-  ({ left, right, className = '', ...props }, ref) => {
+  ({ left, right, variant = 'default', className = '', ...props }, ref) => {
     if (left || right) {
       return (
-        <div className="flex items-center gap-2.5 px-3.5 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-[10px] transition-[border-color] duration-150 focus-within:border-[var(--accent)]">
+        <div className={containerVariants[variant]}>
           {left}
           <input
             ref={ref}
-            className={`flex-1 font-[family-name:var(--font-mono)] text-[13px] text-[var(--text-bright)] bg-transparent border-none outline-none placeholder:text-[var(--text-faint)] ${className}`}
+            className={`flex-1 font-[family-name:var(--font-mono)] ${inputVariants[variant]} text-[var(--text-bright)] bg-transparent border-none outline-none placeholder:text-[var(--text-faint)] ${className}`}
             {...props}
           />
           {right}

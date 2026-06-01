@@ -5,6 +5,7 @@ export const ROUTES = {
   CONTACT: '/contact',
   USERS: '/users',
   RECOMMENDATIONS: '/recommendations',
+  ASK: '/ask',
 } as const
 
 export const POST_ROUTES = {

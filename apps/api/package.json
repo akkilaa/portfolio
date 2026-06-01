@@ -12,8 +12,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^2.0.48",
     "@portfolio/db": "workspace:*",
     "@portfolio/shared": "workspace:*",
+    "ai": "^6.0.191",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

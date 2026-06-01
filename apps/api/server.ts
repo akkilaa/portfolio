@@ -6,6 +6,7 @@ import {
   PrismaUserRepository,
   PrismaRecommendationRepository,
   PrismaRecommendationAuthorRepository,
+  PrismaLlmChatLogRepository,
 } from '@portfolio/db'
 import type { IPostRepository } from './src/ports/post.repository.js'
 import type { IProjectRepository } from './src/ports/project.repository.js'
@@ -23,12 +24,14 @@ import { AuthService } from './src/services/auth.service.js'
 import { GithubOAuthService } from './src/services/github-oauth.service.js'
 import { LinkedInOAuthService } from './src/services/linkedin-oauth.service.js'
 import { RecommendationService } from './src/services/recommendation.service.js'
+import { LlmChatService } from './src/services/llm-chat.service.js'
 import { PostsController } from './src/controllers/posts.controller.js'
 import { ProjectsController } from './src/controllers/projects.controller.js'
 import { ContactController } from './src/controllers/contact.controller.js'
 import { UsersController } from './src/controllers/users.controller.js'
 import { AuthController } from './src/controllers/auth.controller.js'
 import { RecommendationController } from './src/controllers/recommendation.controller.js'
+import { AskController } from './src/controllers/ask.controller.js'
 import { NodemailerEmailService } from './src/adapters/nodemailer.email.js'
 import { composeApp } from './src/container.js'
 
@@ -44,6 +47,7 @@ const recommendationRepository: IRecommendationRepository = new PrismaRecommenda
 )
 const recommendationAuthorRepository: IRecommendationAuthorRepository =
   new PrismaRecommendationAuthorRepository(prisma)
+const llmChatLogRepository = new PrismaLlmChatLogRepository(prisma)
 const emailService = new NodemailerEmailService()
 
 // Application services
@@ -58,6 +62,7 @@ const recommendationService = new RecommendationService(
   recommendationRepository,
   recommendationAuthorRepository,
 )
+const llmChatService = new LlmChatService(llmChatLogRepository)
 
 // Inbound adapters (HTTP controllers)
 const postsController = new PostsController(postsService)
@@ -66,6 +71,7 @@ const contactController = new ContactController(contactService)
 const usersController = new UsersController(usersService)
 const authController = new AuthController(authService, githubOAuthService, linkedinOAuthService)
 const recommendationController = new RecommendationController(recommendationService)
+const askController = new AskController(llmChatService)
 
 const app = composeApp({
   auth: authController,
@@ -74,6 +80,7 @@ const app = composeApp({
   contact: contactController,
   users: usersController,
   recommendations: recommendationController,
+  ask: askController,
 })
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3000
