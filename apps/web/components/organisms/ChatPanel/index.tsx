@@ -80,14 +80,7 @@ const ChatPanel = () => {
       >
         <Input.Text
           variant="chat"
-          left={
-            <span
-              className="font-[family-name:var(--font-mono)] text-[var(--accent)] text-[13px]"
-              aria-hidden="true"
-            >
-              ›
-            </span>
-          }
+          prompt
           right={
             <Button type="submit" variant="ghost" disabled={busy || !input.trim()}>
               send ↵

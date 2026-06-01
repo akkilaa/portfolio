@@ -14,6 +14,7 @@ interface LabelProps extends ComponentPropsWithoutRef<'label'> {
 }
 
 interface TextProps extends ComponentPropsWithoutRef<'input'> {
+  prompt?: boolean
   left?: ReactNode
   right?: ReactNode
   variant?: 'default' | 'chat'
@@ -43,11 +44,21 @@ const Label = ({ required, children, className = '', ...props }: LabelProps) => 
   </label>
 )
 
+const PromptCaret = () => (
+  <span
+    className="font-[family-name:var(--font-mono)] text-[var(--accent)] text-[13px]"
+    aria-hidden="true"
+  >
+    ›
+  </span>
+)
+
 const Text = forwardRef<HTMLInputElement, TextProps>(
-  ({ left, right, variant = 'default', className = '', ...props }, ref) => {
-    if (left || right) {
+  ({ prompt, left, right, variant = 'default', className = '', ...props }, ref) => {
+    if (prompt || left || right) {
       return (
         <div className={containerVariants[variant]}>
+          {prompt && <PromptCaret />}
           {left}
           <input
             ref={ref}

@@ -41,11 +41,7 @@ const SearchToolbar = ({
       <div className="flex-1 min-w-[240px]">
         <Input.Text
           ref={searchRef}
-          left={
-            <span className="font-[family-name:var(--font-mono)] text-[var(--accent)] text-[13px]">
-              ›
-            </span>
-          }
+          prompt
           right={<Kbd>⌘K</Kbd>}
           placeholder={placeholder}
           value={query}
