@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { formatDate, type PostListItemResponse } from '@/lib/posts'
+import { formatDate, type PostListItemResponse } from '@/services/posts'
 import Tag from '@/components/atoms/Tag'
 
 const PostRow = ({ post }: { post: PostListItemResponse }) => {

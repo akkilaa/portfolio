@@ -1,4 +1,4 @@
-import { getPosts } from '@/lib/posts'
+import { getPosts } from '@/services/posts'
 import BlogHero from '@/components/organisms/BlogHero'
 import BlogShell from '@/components/organisms/BlogShell'
 

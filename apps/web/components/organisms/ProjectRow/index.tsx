@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Tag from '@/components/atoms/Tag'
-import { formatProjectDate, type ProjectDetailResponse } from '@/lib/projects'
+import { formatProjectDate, type ProjectDetailResponse } from '@/services/projects'
 
 const ProjectRow = ({ project }: { project: ProjectDetailResponse }) => {
   const year = project.startedAt

@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { getAllProjectTags, type ProjectDetailResponse } from '@/lib/projects'
+import { getAllProjectTags, type ProjectDetailResponse } from '@/services/projects'
 import ProjectRow from '@/components/organisms/ProjectRow'
 import SearchToolbar from '@/components/molecules/SearchToolbar'
 import EmptyState from '@/components/atoms/EmptyState'

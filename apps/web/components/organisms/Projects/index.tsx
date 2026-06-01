@@ -2,7 +2,7 @@ import Link from 'next/link'
 import ProjectCard, { type ProjectData } from '@/components/organisms/ProjectCard'
 import SectionHeading from '@/components/molecules/SectionHeading'
 import Button from '@/components/atoms/Button'
-import { getFeaturedProjects, type ProjectDetailResponse } from '@/lib/projects'
+import { getFeaturedProjects, type ProjectDetailResponse } from '@/services/projects'
 
 function toProjectData(project: ProjectDetailResponse, index: number): ProjectData {
   const year = project.startedAt

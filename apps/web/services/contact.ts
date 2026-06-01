@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/v1'
+import { Api } from '@/lib/api'
 
 export type ContactPayload = {
   name: string
@@ -6,12 +6,10 @@ export type ContactPayload = {
   message: string
 }
 
+const api = new Api()
+
 export async function submitContact(data: ContactPayload): Promise<void> {
-  const res = await fetch(`${API_URL}/contact`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
+  const res = await api.post('/contact', data)
   if (!res.ok) {
     if (res.status === 429) throw new Error('rate_limited')
     if (res.status === 400) throw new Error('validation')

@@ -1,5 +1,5 @@
 import AuthorProfileCard from '@/components/organisms/AuthorProfileCard'
-import type { RecommendationWithAuthor } from '@/lib/recommendations'
+import type { RecommendationWithAuthor } from '@/services/recommendations'
 import { formatDate } from '@/utils/dateUtils'
 
 const RecommendationCard = ({ rec }: { rec: RecommendationWithAuthor }) => {

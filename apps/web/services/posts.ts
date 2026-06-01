@@ -1,18 +1,19 @@
 import type { PostDetailResponse, PostListItemResponse, PostListResponse } from '@portfolio/shared'
+import { Api } from '@/lib/api'
 
 export type { PostDetailResponse, PostListItemResponse }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/v1'
+const api = new Api()
 
 export async function getPosts(): Promise<PostListItemResponse[]> {
-  const res = await fetch(`${API_URL}/posts`, { next: { revalidate: 60 } })
+  const res = await api.get('/posts', { next: { revalidate: 60 } })
   if (!res.ok) return []
   const data = (await res.json()) as PostListResponse
   return data.items
 }
 
 export async function getPost(slug: string): Promise<PostDetailResponse | null> {
-  const res = await fetch(`${API_URL}/posts/${slug}`, { next: { revalidate: 60 } })
+  const res = await api.get(`/posts/${slug}`, { next: { revalidate: 60 } })
   if (!res.ok) return null
   return res.json() as Promise<PostDetailResponse>
 }

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import SectionHeading from '@/components/molecules/SectionHeading'
 import Button from '@/components/atoms/Button'
 import Input from '@/components/molecules/Input'
-import { submitContact } from '@/lib/contact'
+import { submitContact } from '@/services/contact'
 
 const ERROR_MESSAGES: Record<string, string> = {
   rate_limited: 'too many requests — wait a moment and try again',

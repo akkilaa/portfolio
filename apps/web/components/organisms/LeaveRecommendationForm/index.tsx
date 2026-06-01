@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import type { RecommendationMeResponse } from '@/lib/recommendations'
-import { getRecommendationAuthor, submitRecommendation } from '@/lib/recommendations'
+import type { RecommendationMeResponse } from '@/services/recommendations'
+import { getRecommendationAuthor, submitRecommendation } from '@/services/recommendations'
 import Button from '@/components/atoms/Button'
 import Input from '@/components/molecules/Input'
 import SectionHeading from '@/components/molecules/SectionHeading'

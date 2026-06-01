@@ -1,5 +1,5 @@
 import Tag from '@/components/atoms/Tag'
-import { formatProjectDate, type ProjectDetailResponse } from '@/lib/projects'
+import { formatProjectDate, type ProjectDetailResponse } from '@/services/projects'
 
 const ProjectHeader = ({ project }: { project: ProjectDetailResponse }) => {
   const start = formatProjectDate(project.startedAt)

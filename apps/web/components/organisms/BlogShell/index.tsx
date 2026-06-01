@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import type { PostListItemResponse } from '@/lib/posts'
-import { getAllTags } from '@/lib/posts'
+import type { PostListItemResponse } from '@/services/posts'
+import { getAllTags } from '@/services/posts'
 import FeaturedPost from '@/components/organisms/FeaturedPost'
 import PostRow from '@/components/organisms/PostRow'
 import SearchToolbar from '@/components/molecules/SearchToolbar'

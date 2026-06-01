@@ -1,4 +1,4 @@
-import { getRecommendations } from '@/lib/recommendations'
+import { getRecommendations } from '@/services/recommendations'
 import RecommendationsHero from '@/components/organisms/RecommendationsHero'
 import RecommendationsShell from '@/components/organisms/RecommendationsShell'
 

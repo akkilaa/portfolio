@@ -1,4 +1,4 @@
-import { formatDate, type PostDetailResponse } from '@/lib/posts'
+import { formatDate, type PostDetailResponse } from '@/services/posts'
 import Tag from '@/components/atoms/Tag'
 
 const PostHeader = ({ post }: { post: PostDetailResponse }) => {

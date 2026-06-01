@@ -1,4 +1,4 @@
-import type { RecommendationWithAuthor } from '@/lib/recommendations'
+import type { RecommendationWithAuthor } from '@/services/recommendations'
 import RecommendationCard from '@/components/organisms/RecommendationCard'
 import LeaveRecommendationForm from '@/components/organisms/LeaveRecommendationForm'
 import SectionHeading from '@/components/molecules/SectionHeading'

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { formatDate, type PostListItemResponse } from '@/lib/posts'
+import { formatDate, type PostListItemResponse } from '@/services/posts'
 
 const FeaturedPost = ({ post }: { post: PostListItemResponse }) => {
   const d = formatDate(post.publishedAt)

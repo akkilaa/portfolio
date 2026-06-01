@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getProject, getAllProjectSlugs } from '@/lib/projects'
+import { getProject, getAllProjectSlugs } from '@/services/projects'
 import { extractToc } from '@/lib/markdown'
 import ProjectHeader from '@/components/organisms/ProjectHeader'
 import PostToc from '@/components/organisms/PostToc'

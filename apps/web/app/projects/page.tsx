@@ -1,4 +1,4 @@
-import { getProjects } from '@/lib/projects'
+import { getProjects } from '@/services/projects'
 import ProjectsHero from '@/components/organisms/ProjectsHero'
 import ProjectsShell from '@/components/organisms/ProjectsShell'
 
