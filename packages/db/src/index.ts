@@ -11,6 +11,7 @@ export { PrismaPostRepository } from './adapters/prisma/post.repository'
 export { PrismaProjectRepository } from './adapters/prisma/project.repository'
 export { PrismaTagRepository } from './adapters/prisma/tag.repository'
 export { PrismaContactRepository } from './adapters/prisma/contact.repository'
+export { PrismaMediaRepository } from './adapters/prisma/media.repository'
 export {
   PrismaRecommendationRepository,
   PrismaRecommendationAuthorRepository,

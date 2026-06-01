@@ -1,0 +1,17 @@
+/// A single stored binary (image) — the source of truth for every byte we keep.
+/// References (ProjectImage, Post.coverImage, markdown bodies) point at this by id/key.
+model MediaAsset {
+  id          String    @id @default(uuid()) @db.Uuid
+  key         String    @unique // backend-agnostic object key, e.g. ab/<sha256>.webp
+  mime        String
+  width       Int
+  height      Int
+  sizeBytes   Int       @map("size_bytes")
+  checksum    String    @unique // sha256 of stored bytes — dedupe + integrity
+  blurDataUrl String?   @map("blur_data_url") // base64 LQIP for next/image
+  alt         String?
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz // soft delete; GC sweeps bytes later
+
+  @@map("media_assets")
+}

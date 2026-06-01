@@ -34,6 +34,8 @@ export type {
 
 export type { ContactSubmissionResponse, ContactListResponse } from './dtos/contact.dto'
 
+export type { MediaAssetResponse } from './dtos/media.dto'
+
 export type { UserResponse } from './dtos/user.dto'
 
 export type { Expand } from './helper-types'
@@ -59,6 +61,8 @@ export type {
 } from './domain/post'
 
 export type { ContactSubmission, CreateContactInput } from './domain/contact'
+
+export type { MediaAsset, CreateMediaAssetInput } from './domain/media'
 
 export type {
   RecommendationProvider,

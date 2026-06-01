@@ -6,6 +6,7 @@ export const ROUTES = {
   USERS: '/users',
   RECOMMENDATIONS: '/recommendations',
   ASK: '/ask',
+  MEDIA: '/media',
 } as const
 
 export const POST_ROUTES = {
@@ -56,4 +57,9 @@ export const RECOMMENDATION_ROUTES = {
   BY_ID: '/:id',
   APPROVE: '/:id/approve',
   REJECT: '/:id/reject',
+} as const
+
+export const MEDIA_ROUTES = {
+  ROOT: '/',
+  BY_ID: '/:id',
 } as const
