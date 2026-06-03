@@ -13,6 +13,7 @@ export function serializeProject(project: Project): ProjectResponse {
     title: project.title,
     descriptionMd: project.descriptionMd,
     shortDescription: project.shortDescription,
+    tagline: project.tagline,
     role: project.role,
     startedAt: project.startedAt?.toISOString() ?? null,
     endedAt: project.endedAt?.toISOString() ?? null,

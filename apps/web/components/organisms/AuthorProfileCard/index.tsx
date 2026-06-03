@@ -2,6 +2,7 @@ import GithubIcon from '@/components/atoms/GithubIcon'
 import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import { initials } from '@/utils/nameUtils'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type AuthorProfileCardProps = {
   displayName: string
@@ -21,7 +22,7 @@ const AuthorProfileCard = ({
   return (
     <div className="flex items-center gap-3">
       {avatarUrl ? (
-        <img
+        <Image
           src={avatarUrl}
           alt={displayName}
           width={40}

@@ -6,12 +6,13 @@ import GithubIcon from '@/components/atoms/GithubIcon'
 import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import MailIcon from '@/components/atoms/MailIcon'
 import PageHeading from '@/components/organisms/PageHeading'
+import { countYearsUntilToday } from '@/utils/dateUtils'
 
 const HeroIntro = () => (
   <div>
     <div className="inline-flex items-center gap-2.5 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--text-dim)] py-1.5 px-3 border border-[var(--border)] rounded-full bg-[var(--surface)] mb-7 whitespace-nowrap">
       <Blip />
-      <span>AVAILABLE — open to roles &amp; freelance</span>
+      <span>AVAILABLE · open to roles &amp; freelance</span>
     </div>
     <PageHeading
       leadingDollar
@@ -23,11 +24,17 @@ const HeroIntro = () => (
       middle="Full-Stack Developer | AI Engineer | Belgrade ↔ Remote"
       description={
         <>
-          I build <em className="text-[var(--accent)] not-italic">fullstack products</em>
-          &nbsp;end-to-end — Next.js, Postgres, and a self-hosted stack thin enough to fit on a
-          single VPS. Lately I&apos;ve been wiring local LLMs into real product surfaces. Currently
-          shipping <em className="text-[var(--accent)] not-italic">akkila.dev</em>, the site
-          you&apos;re on.
+          I build and ship{' '}
+          <em className="text-[var(--accent)] not-italic">production software end-to-end</em>, web
+          and mobile: real-time trading dashboards, React Native apps in the stores, the design
+          systems beneath them. In{' '}
+          <em className="text-[var(--accent)] not-italic">
+            {countYearsUntilToday('2019-02-01')} years
+          </em>{' '}
+          I&apos;ve gone from frontend to full-stack, and lately I&apos;ve been wiring{' '}
+          <em className="text-[var(--accent)] not-italic">local LLMs</em> into real product
+          surfaces. <em className="text-[var(--accent)] not-italic">akkila.dev</em>, the site
+          you&apos;re reading, is the latest.
         </>
       }
     />

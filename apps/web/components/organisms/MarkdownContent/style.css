@@ -107,6 +107,70 @@
   color: var(--accent);
 }
 
+/* images */
+.post-prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 28px color-mix(in oklab, black 45%, transparent);
+}
+
+.post-prose p:has(> img:only-child) {
+  text-align: center;
+}
+
+.post-prose .screenshot-grid > p:has(> img:only-child) {
+  text-align: unset;
+}
+
+/* portrait screenshots — constrain to phone proportions */
+.post-prose .screenshot-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin: 2em 0;
+  overflow: hidden;
+}
+
+/* <p> is the actual flex child react-markdown inserts around each image */
+.post-prose .screenshot-grid > p {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 280px;
+  margin: 0;
+}
+
+/* also handle the case where img is a direct child (no p wrapper) */
+.post-prose .screenshot-grid > img {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 280px;
+}
+
+.post-prose .screenshot-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px color-mix(in oklab, black 55%, transparent);
+}
+
+/* app logo / square image — keep it compact */
+.post-prose .app-logo {
+  display: flex;
+  justify-content: center;
+  margin: 1.5em 0;
+}
+
+.post-prose .app-logo img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px color-mix(in oklab, black 40%, transparent);
+}
+
 /* callout */
 .callout {
   display: grid;
@@ -154,4 +218,35 @@
 }
 .tok-pun {
   color: #888;
+}
+
+/* lightbox */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: color-mix(in oklab, black 88%, transparent);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+  animation: lightbox-in 150ms ease;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lightbox-img {
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 32px 96px color-mix(in oklab, black 70%, transparent);
+  cursor: default;
 }

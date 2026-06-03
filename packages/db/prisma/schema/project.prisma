@@ -4,6 +4,7 @@ model Project {
   title            String
   descriptionMd    String    @map("description_md")
   shortDescription String    @map("short_description")
+  tagline          String?
   role             String?
   startedAt        DateTime? @map("started_at") @db.Date
   endedAt          DateTime? @map("ended_at") @db.Date

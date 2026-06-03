@@ -14,7 +14,8 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
-    "user:create": "tsx --env-file=../../.env scripts/create-user.ts"
+    "user:create": "tsx --env-file=../../.env scripts/create-user.ts",
+    "tags:create": "tsx --env-file=../../.env scripts/create-tags.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

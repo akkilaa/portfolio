@@ -5,6 +5,7 @@ import rehypeRaw from 'rehype-raw'
 import type { Highlighter } from 'shiki'
 import { getHighlighter, codeBlockTransformer } from '@/lib/shiki'
 import CopyButton from '../../atoms/CopyButton'
+import { LightboxImage } from '../../atoms/ImageLightbox'
 
 import './style.css'
 
@@ -53,7 +54,7 @@ const MarkdownContent = async ({ children }: { children: string }) => {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeSlug]}
-        components={{ pre: Pre }}
+        components={{ pre: Pre, img: LightboxImage as never }}
       >
         {children}
       </ReactMarkdown>

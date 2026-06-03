@@ -18,6 +18,12 @@ const ProjectHeader = ({ project }: { project: ProjectDetailResponse }) => {
         {project.title}
       </h1>
 
+      {project.tagline && (
+        <p className="font-[family-name:var(--font-mono)] text-[15px] text-[var(--text)] m-0 mb-[18px]">
+          {project.tagline}
+        </p>
+      )}
+
       <div className="flex gap-3.5 flex-wrap items-center font-[family-name:var(--font-mono)] text-[12.5px] text-[var(--text-dim)]">
         {project.role && <span>{project.role}</span>}
         {project.role && dateRange && <span className="text-[var(--text-faint)]">·</span>}

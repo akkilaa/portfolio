@@ -6,6 +6,7 @@ export type Project = {
   title: string
   descriptionMd: string
   shortDescription: string
+  tagline: string | null
   role: string | null
   startedAt: Date | null
   endedAt: Date | null
@@ -39,6 +40,7 @@ export type CreateProjectInput = {
   title: string
   descriptionMd: string
   shortDescription: string
+  tagline?: string
   role?: string
   startedAt?: Date
   endedAt?: Date

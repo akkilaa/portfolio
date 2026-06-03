@@ -9,6 +9,7 @@ import SectionHeading from '@/components/molecules/SectionHeading'
 import GithubIcon from '@/components/atoms/GithubIcon'
 import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/v1'
 
@@ -44,7 +45,13 @@ const oauthLinkCls =
 const AuthorBadge = ({ author }: { author: Author }) => (
   <div className="flex items-center gap-3">
     {author.avatarUrl && (
-      <img src={author.avatarUrl} alt={author.displayName} className="w-8 h-8 rounded-full" />
+      <Image
+        src={author.avatarUrl}
+        alt={author.displayName}
+        width={32}
+        height={32}
+        className="w-8 h-8 rounded-full"
+      />
     )}
     <div>
       <p className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--text-bright)]">
@@ -118,9 +125,11 @@ const Form = ({ me, onSubmit, loading, error }: FormProps) => (
   <form className={cardCls} onSubmit={onSubmit}>
     <div className="flex items-center gap-3 mb-5">
       {me.author.avatarUrl && (
-        <img
+        <Image
           src={me.author.avatarUrl}
           alt={me.author.displayName}
+          width={32}
+          height={32}
           className="w-8 h-8 rounded-full"
         />
       )}

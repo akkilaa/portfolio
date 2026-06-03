@@ -18,3 +18,4 @@ export {
 } from './adapters/prisma/recommendation.repository'
 export { PrismaAuditLogRepository } from './adapters/prisma/audit-log.repository'
 export { PrismaLlmChatLogRepository } from './adapters/prisma/llm-chat-log.repository'
+export { isPrismaValidationError, isPrismaError } from './utils'
