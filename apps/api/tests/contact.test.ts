@@ -11,11 +11,17 @@ import { UsersService } from '../src/services/users.service'
 import { UsersController } from '../src/controllers/users.controller'
 import { AuthService } from '../src/services/auth.service'
 import { AuthController } from '../src/controllers/auth.controller'
+import { AskController } from '../src/controllers/ask.controller'
+import { RecommendationController } from '../src/controllers/recommendation.controller'
+import { MediaService } from '../src/services/media.service'
+import { MediaController } from '../src/controllers/media.controller'
 import { InMemoryEmailService } from './fakes/InMemoryEmailService'
 import { InMemoryPostRepository } from './fakes/InMemoryPostRepository'
 import { InMemoryProjectRepository } from './fakes/InMemoryProjectRepository'
 import { InMemoryContactRepository } from './fakes/InMemoryContactRepository'
 import { InMemoryUserRepository } from './fakes/InMemoryUserRepository'
+import { InMemoryMediaRepository } from './fakes/InMemoryMediaRepository'
+import { InMemoryStorage } from './fakes/InMemoryStorage'
 import { contactInput, anotherContactInput } from './fixtures/contact.fixtures'
 import type { CreateContactInput } from '@portfolio/shared'
 
@@ -33,6 +39,13 @@ function app() {
     users: new UsersController(new UsersService(new InMemoryUserRepository())),
     auth: new AuthController(
       new AuthService(new InMemoryUserRepository(), new InMemoryEmailService()),
+      {},
+      {},
+    ),
+    ask: new AskController({} as never),
+    recommendations: new RecommendationController({} as never),
+    media: new MediaController(
+      new MediaService(new InMemoryStorage(), new InMemoryMediaRepository()),
     ),
   })
 }

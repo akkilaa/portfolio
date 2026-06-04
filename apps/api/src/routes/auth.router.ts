@@ -7,23 +7,17 @@ import type { AuthController } from '@api/controllers/auth.controller'
 export function createAuthRouter(controller: AuthController): Router {
   const router = Router()
 
-  router.post(AUTH_ROUTES.LOGIN, validate(LoginSchema), (req, res, next) =>
-    controller.login(req, res, next),
-  )
-  router.get(AUTH_ROUTES.VERIFY, (req, res, next) => controller.verify(req, res, next))
-  router.post(AUTH_ROUTES.REFRESH, (req, res, next) => controller.refresh(req, res, next))
-  router.post(AUTH_ROUTES.LOGOUT, (req, res, _) => controller.logout(req, res))
+  router.post(AUTH_ROUTES.LOGIN, validate(LoginSchema), controller.login)
+  router.get(AUTH_ROUTES.VERIFY, controller.verify)
+  router.post(AUTH_ROUTES.REFRESH, controller.refresh)
+  router.post(AUTH_ROUTES.LOGOUT, controller.logout)
 
   // OAuth callbacks registered before the redirect initiators (more specific path first)
-  router.get(AUTH_ROUTES.GITHUB_CALLBACK, (req, res, next) =>
-    controller.githubCallback(req, res, next),
-  )
-  router.get(AUTH_ROUTES.GITHUB, (req, res) => controller.githubRedirect(req, res))
+  router.get(AUTH_ROUTES.GITHUB_CALLBACK, controller.githubCallback)
+  router.get(AUTH_ROUTES.GITHUB, controller.githubRedirect)
 
-  router.get(AUTH_ROUTES.LINKEDIN_CALLBACK, (req, res, next) =>
-    controller.linkedinCallback(req, res, next),
-  )
-  router.get(AUTH_ROUTES.LINKEDIN, (req, res) => controller.linkedinRedirect(req, res))
+  router.get(AUTH_ROUTES.LINKEDIN_CALLBACK, controller.linkedinCallback)
+  router.get(AUTH_ROUTES.LINKEDIN, controller.linkedinRedirect)
 
   return router
 }
