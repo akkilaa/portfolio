@@ -118,6 +118,12 @@
 
 .post-prose p:has(> img:only-child) {
   text-align: center;
+  margin: 2em 0;
+}
+
+.post-prose .screenshot-grid > p:has(> img:only-child),
+.post-prose .app-logo p:has(> img:only-child) {
+  margin: 0;
 }
 
 .post-prose .screenshot-grid > p:has(> img:only-child) {

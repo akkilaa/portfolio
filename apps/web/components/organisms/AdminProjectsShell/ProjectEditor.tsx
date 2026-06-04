@@ -13,6 +13,8 @@ export type EditorState = {
   liveUrl: string
   repoUrl: string
   role: string
+  startedAt: string
+  endedAt: string
 }
 
 export function projectToEditor(p: ProjectResponse): EditorState {
@@ -25,6 +27,8 @@ export function projectToEditor(p: ProjectResponse): EditorState {
     liveUrl: p.liveUrl ?? '',
     repoUrl: p.repoUrl ?? '',
     role: p.role ?? '',
+    startedAt: p.startedAt ? p.startedAt.slice(0, 10) : '',
+    endedAt: p.endedAt ? p.endedAt.slice(0, 10) : '',
   }
 }
 
@@ -134,6 +138,48 @@ const ProjectEditor = ({
             value={editor.repoUrl}
             onChange={(e) => onChange('repoUrl', e.target.value)}
           />
+        </Input.Field>
+        <Input.Field>
+          <Input.Label>STARTED AT</Input.Label>
+          <Input.Text
+            type="date"
+            value={editor.startedAt}
+            onChange={(e) => onChange('startedAt', e.target.value)}
+          />
+        </Input.Field>
+        <Input.Field>
+          <div className="flex items-center justify-between mb-1.5">
+            <Input.Label className="mb-0">ENDED AT</Input.Label>
+            {editor.endedAt ? (
+              <button
+                type="button"
+                onClick={() => onChange('endedAt', '')}
+                className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-dim)] hover:text-[var(--accent)] transition-colors cursor-pointer"
+              >
+                mark ongoing
+              </button>
+            ) : null}
+          </div>
+          {editor.endedAt ? (
+            <Input.Text
+              type="date"
+              value={editor.endedAt}
+              onChange={(e) => onChange('endedAt', e.target.value)}
+            />
+          ) : (
+            <div className="flex items-center justify-between w-full bg-[var(--bg)] border border-[var(--border-strong)] rounded-lg py-[11px] px-[14px]">
+              <span className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--accent)]">
+                ongoing
+              </span>
+              <button
+                type="button"
+                onClick={() => onChange('endedAt', new Date().toISOString().slice(0, 10))}
+                className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-dim)] hover:text-[var(--text-bright)] transition-colors cursor-pointer"
+              >
+                set date
+              </button>
+            </div>
+          )}
         </Input.Field>
       </div>
 

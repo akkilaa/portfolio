@@ -49,12 +49,21 @@ const MarkdownContent = async ({ children }: { children: string }) => {
   const highlighter = await getHighlighter()
   const Pre = makePre(highlighter)
 
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL_ORIGIN ?? ''
+  let imageCount = 0
+  const Img = (props: React.ImgHTMLAttributes<HTMLImageElement> & { node?: unknown }) => {
+    const isFirst = imageCount++ === 0
+    const rawSrc = typeof props.src === 'string' ? props.src : undefined
+    const src = rawSrc?.startsWith('/media') ? `${apiUrl}${rawSrc}` : rawSrc
+    return <LightboxImage {...props} src={src} priority={isFirst} />
+  }
+
   return (
     <article className="post-prose">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeSlug]}
-        components={{ pre: Pre, img: LightboxImage as never }}
+        components={{ pre: Pre, img: Img as never }}
       >
         {children}
       </ReactMarkdown>

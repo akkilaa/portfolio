@@ -19,7 +19,22 @@ const useHighlightActiveSection = (ids: string[], initialId?: string) => {
       observers.push(observer)
     })
 
-    return () => observers.forEach((o) => o.disconnect())
+    // When scrolled to the bottom, the last section heading can never reach the
+    // active zone — activate the last item explicitly in that case.
+    const handleScroll = () => {
+      const lastId = ids[ids.length - 1]
+      if (!lastId) return
+      const atBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4
+      if (atBottom) setActive(lastId)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      observers.forEach((o) => o.disconnect())
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [ids])
 
   return active

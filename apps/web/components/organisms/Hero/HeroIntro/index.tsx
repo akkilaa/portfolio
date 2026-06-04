@@ -7,6 +7,7 @@ import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import MailIcon from '@/components/atoms/MailIcon'
 import PageHeading from '@/components/organisms/PageHeading'
 import { countYearsUntilToday } from '@/utils/dateUtils'
+import { SITE_AUTHOR } from '@/lib/site'
 
 const HeroIntro = () => (
   <div>
@@ -46,19 +47,14 @@ const HeroIntro = () => (
         ls projects/
       </Button>
       <div className="ml-auto flex gap-2">
+        <IconButtonLink href={SITE_AUTHOR.github} icon={<GithubIcon />} label="GitHub" external />
         <IconButtonLink
-          href="https://github.com/akkilaa"
-          icon={<GithubIcon />}
-          label="GitHub"
-          external
-        />
-        <IconButtonLink
-          href="https://www.linkedin.com/in/aleksa-janjic"
+          href={SITE_AUTHOR.linkedin}
           icon={<LinkedinIcon />}
           label="LinkedIn"
           external
         />
-        <IconButtonLink href="mailto:hello@akkila.dev" icon={<MailIcon />} label="Email" />
+        <IconButtonLink href={`mailto:${SITE_AUTHOR.email}`} icon={<MailIcon />} label="Email" />
       </div>
     </div>
   </div>

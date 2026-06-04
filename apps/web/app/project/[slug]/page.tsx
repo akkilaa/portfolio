@@ -6,6 +6,7 @@ import ProjectHeader from '@/components/organisms/ProjectHeader'
 import PostToc from '@/components/organisms/PostToc'
 import MarkdownContent from '@/components/organisms/MarkdownContent'
 import PostFooter from '@/components/organisms/PostFooter'
+import { SITE_URL, SITE_AUTHOR } from '@/lib/site'
 
 export const revalidate = 60
 
@@ -28,23 +29,40 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   const toc = extractToc(project.descriptionMd)
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.shortDescription,
+    url: `${SITE_URL}/project/${project.slug}`,
+    dateCreated: project.startedAt,
+    dateModified: project.updatedAt,
+    author: { '@type': 'Person', name: SITE_AUTHOR.name, url: SITE_URL },
+  }
+
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_240px] gap-16 py-16 pb-24 max-[1040px]:grid-cols-1 max-[1040px]:gap-8 max-[1040px]:py-10">
-      <div>
-        <Link
-          href="/#projects"
-          className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--text-dim)] inline-flex items-center gap-1.5 mb-7 transition-colors duration-150 hover:text-[var(--accent)]"
-        >
-          ← cd ../#projects
-        </Link>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="grid grid-cols-[minmax(0,1fr)_240px] gap-16 py-16 pb-24 max-[1040px]:grid-cols-1 max-[1040px]:gap-8 max-[1040px]:py-10">
+        <div>
+          <Link
+            href="/#projects"
+            className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--text-dim)] inline-flex items-center gap-1.5 mb-7 transition-colors duration-150 hover:text-[var(--accent)]"
+          >
+            ← cd ../#projects
+          </Link>
 
-        <ProjectHeader project={project} />
-        <MarkdownContent>{project.descriptionMd}</MarkdownContent>
+          <ProjectHeader project={project} />
+          <MarkdownContent>{project.descriptionMd}</MarkdownContent>
 
-        <PostFooter />
+          <PostFooter />
+        </div>
+
+        <PostToc items={toc} />
       </div>
-
-      <PostToc items={toc} />
-    </div>
+    </>
   )
 }

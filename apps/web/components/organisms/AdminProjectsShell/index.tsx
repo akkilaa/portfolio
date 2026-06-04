@@ -73,6 +73,8 @@ const AdminProjectsShell = () => {
         liveUrl: editor.liveUrl || null,
         repoUrl: editor.repoUrl || null,
         role: editor.role || null,
+        startedAt: editor.startedAt ? `${editor.startedAt}T00:00:00.000Z` : null,
+        endedAt: editor.endedAt ? `${editor.endedAt}T00:00:00.000Z` : null,
       })
       syncProject(updated)
       flashSaved()

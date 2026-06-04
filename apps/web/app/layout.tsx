@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+import { SITE_META, personJsonLd } from '@/lib/site'
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
@@ -12,14 +13,17 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: 'akkila.dev — Full-Stack Developer & AI Engineer',
-  description: 'Full-stack portfolio. Next.js, Postgres, AI engineering.',
-}
+export const metadata: Metadata = SITE_META
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="dark" className={`${geist.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   )

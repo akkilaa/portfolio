@@ -9,6 +9,7 @@ import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 type Props = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   src?: string
   node?: unknown
+  priority?: boolean
 }
 
 const XIcon = () => (
@@ -17,7 +18,7 @@ const XIcon = () => (
   </svg>
 )
 
-export function LightboxImage({ node: _node, src, alt, className }: Props) {
+export function LightboxImage({ node: _node, src, alt, className, priority }: Props) {
   const [open, setOpen] = useState(false)
   const close = useCallback(() => setOpen(false), [])
 
@@ -33,6 +34,7 @@ export function LightboxImage({ node: _node, src, alt, className }: Props) {
         height={0}
         sizes="100vw"
         className={className}
+        priority={priority}
         onClick={() => setOpen(true)}
         style={{ width: '100%', height: 'auto', cursor: 'zoom-in' }}
       />
