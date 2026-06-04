@@ -161,4 +161,30 @@ export class ProjectsController {
       next(err)
     }
   }
+
+  feature = async (
+    req: Request<IdParams, ProjectResponse>,
+    res: Response<ProjectResponse>,
+    next: NextFunction,
+  ) => {
+    try {
+      const project = await this.service.feature(req.params.id)
+      res.json(serializeProject(project))
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  unfeature = async (
+    req: Request<IdParams, ProjectResponse>,
+    res: Response<ProjectResponse>,
+    next: NextFunction,
+  ) => {
+    try {
+      const project = await this.service.unfeature(req.params.id)
+      res.json(serializeProject(project))
+    } catch (err) {
+      next(err)
+    }
+  }
 }

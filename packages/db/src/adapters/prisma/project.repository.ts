@@ -137,4 +137,12 @@ export class PrismaProjectRepository {
   unpublish(id: string): Promise<Project> {
     return this.db.project.update({ where: { id }, data: { published: false } })
   }
+
+  feature(id: string): Promise<Project> {
+    return this.db.project.update({ where: { id }, data: { featured: true } })
+  }
+
+  unfeature(id: string): Promise<Project> {
+    return this.db.project.update({ where: { id }, data: { featured: false } })
+  }
 }

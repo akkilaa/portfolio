@@ -48,4 +48,12 @@ export class ProjectsService {
   restore(id: string) {
     return this.projects.restore(id)
   }
+
+  feature(id: string) {
+    return this.projects.feature(id)
+  }
+
+  unfeature(id: string) {
+    return this.projects.unfeature(id)
+  }
 }

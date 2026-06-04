@@ -16,6 +16,8 @@ export function createProjectsRouter(controller: ProjectsController): Router {
   router.patch(PROJECT_ROUTES.PUBLISH, (req, res, next) => controller.publish(req, res, next))
   router.patch(PROJECT_ROUTES.UNPUBLISH, (req, res, next) => controller.unpublish(req, res, next))
   router.patch(PROJECT_ROUTES.RESTORE, (req, res, next) => controller.restore(req, res, next))
+  router.patch(PROJECT_ROUTES.FEATURE, (req, res, next) => controller.feature(req, res, next))
+  router.patch(PROJECT_ROUTES.UNFEATURE, (req, res, next) => controller.unfeature(req, res, next))
   router.delete(PROJECT_ROUTES.BY_ID, (req, res, next) => controller.delete(req, res, next))
 
   return router

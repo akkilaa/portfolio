@@ -22,7 +22,7 @@ export class AuthService {
         const token = jwt.sign({ sub: email, purpose: 'magic-link' }, process.env.JWT_SECRET!, {
           expiresIn: '15m',
         })
-        const link = `${process.env.API_BASE_URL}/v1/auth/verify?token=${token}`
+        const link = `${process.env.APP_URL}/admin/verify?token=${token}`
         await this.email.sendMagicLink(email, link)
       }
     }

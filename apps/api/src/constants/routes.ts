@@ -27,6 +27,8 @@ export const PROJECT_ROUTES = {
   PUBLISH: '/:id/publish',
   UNPUBLISH: '/:id/unpublish',
   RESTORE: '/:id/restore',
+  FEATURE: '/:id/feature',
+  UNFEATURE: '/:id/unfeature',
 } as const
 
 export const CONTACT_ROUTES = {

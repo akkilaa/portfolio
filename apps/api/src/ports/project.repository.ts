@@ -22,4 +22,6 @@ export interface IProjectRepository {
   restore(id: string): Promise<Project>
   publish(id: string): Promise<Project>
   unpublish(id: string): Promise<Project>
+  feature(id: string): Promise<Project>
+  unfeature(id: string): Promise<Project>
 }
