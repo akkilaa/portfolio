@@ -7,7 +7,7 @@ function isPublicAdminPath(pathname: string) {
   return PUBLIC_ADMIN_PREFIXES.some((path) => pathname === path || pathname.startsWith(`${path}/`))
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
   if (isPublicAdminPath(pathname)) {

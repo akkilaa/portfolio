@@ -51,4 +51,8 @@ export type CreateProjectInput = {
   tagSlugs?: string[]
 }
 
-export type UpdateProjectInput = Partial<CreateProjectInput>
+export type UpdateProjectInput = Partial<CreateProjectInput> & {
+  liveUrl?: string | null
+  repoUrl?: string | null
+  endedAt?: string | null
+}
