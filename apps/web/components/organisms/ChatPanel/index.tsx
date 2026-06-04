@@ -10,8 +10,7 @@ import Button from '@/components/atoms/Button'
 import Chip from '@/components/atoms/Chip'
 import Input from '@/components/molecules/Input'
 import { prepareAskRequest } from './utils'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/v1'
+import { BASE_URL } from '@/lib/api'
 
 const SUGGESTIONS = [
   'what is your stack?',
@@ -31,7 +30,7 @@ const SEED_MESSAGES = [
 const ChatPanel = () => {
   const { messages, sendMessage, status } = useChat({
     transport: new TextStreamChatTransport({
-      api: `${API_URL}/ask`,
+      api: `${BASE_URL}/ask`,
       prepareSendMessagesRequest: prepareAskRequest,
     }),
     messages: SEED_MESSAGES,

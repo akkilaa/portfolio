@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 import withBundleAnalyzer from '@next/bundle-analyzer'
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [process.env.NEXT_PUBLIC_LOCAL_IP!],
   images: {
     // Skip optimization in dev — Next.js 15+ blocks localhost (private IP) in the optimizer
     unoptimized: process.env.NODE_ENV === 'development',

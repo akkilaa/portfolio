@@ -27,7 +27,11 @@ export const CreateProjectSchema = z.object({
   tagSlugs: z.array(z.string().min(1).max(100)).max(20).optional(),
 })
 
-export const UpdateProjectSchema = CreateProjectSchema.partial()
+export const UpdateProjectSchema = CreateProjectSchema.partial().extend({
+  liveUrl: safeUrl.nullish(),
+  repoUrl: safeUrl.nullish(),
+  endedAt: z.iso.datetime().nullish(),
+})
 
 export type CreateProjectInput = z.infer<typeof CreateProjectSchema>
 export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>

@@ -10,8 +10,7 @@ import GithubIcon from '@/components/atoms/GithubIcon'
 import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import Link from 'next/link'
 import Image from 'next/image'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/v1'
+import { BASE_URL } from '@/lib/api'
 
 const ERROR_MESSAGES: Record<string, string> = {
   rate_limited: 'too many attempts — wait a moment and try again',
@@ -82,11 +81,11 @@ const Unauthenticated = () => (
       sign in to verify your identity
     </p>
     <div className="flex flex-col gap-3">
-      <Link href={`${API_URL}/auth/github`} className={oauthLinkCls}>
+      <Link href={`${BASE_URL}/auth/github`} className={oauthLinkCls}>
         <GithubIcon />
         continue with github
       </Link>
-      <Link href={`${API_URL}/auth/linkedin`} className={oauthLinkCls}>
+      <Link href={`${BASE_URL}/auth/linkedin`} className={oauthLinkCls}>
         <LinkedinIcon />
         continue with linkedin
       </Link>
