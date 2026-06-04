@@ -62,7 +62,7 @@ const Text = forwardRef<HTMLInputElement, TextProps>(
           {left}
           <input
             ref={ref}
-            className={`flex-1 font-[family-name:var(--font-mono)] ${inputVariants[variant]} text-[var(--text-bright)] bg-transparent border-none outline-none placeholder:text-[var(--text-faint)] ${className}`}
+            className={`flex-1 min-w-0 font-[family-name:var(--font-mono)] ${inputVariants[variant]} text-[var(--text-bright)] bg-transparent border-none outline-none placeholder:text-[var(--text-faint)] ${className}`}
             {...props}
           />
           {right}

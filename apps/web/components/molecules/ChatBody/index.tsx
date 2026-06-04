@@ -12,9 +12,11 @@ const ROLE_MAP: Record<string, Message['who']> = {
 type Props = {
   messages: UIMessage[]
   busy: boolean
+  errorMsg?: string
+  limitReached?: boolean
 }
 
-const ChatBody = ({ messages, busy }: Props) => {
+const ChatBody = ({ messages, busy, errorMsg, limitReached }: Props) => {
   const threadRef = useRef<HTMLDivElement>(null)
 
   // Scroll bottom to see new messages
@@ -43,6 +45,16 @@ const ChatBody = ({ messages, busy }: Props) => {
         return <ChatMessage key={message.id} message={display} />
       })}
       {busy && <TypingMessage />}
+      {limitReached && (
+        <div className="text-[13px] font-[family-name:var(--font-mono)] text-[var(--text-faint)] border border-dashed border-[var(--border)] rounded-[8px] px-3 py-2">
+          // conversation limit reached — refresh to start over.
+        </div>
+      )}
+      {!limitReached && errorMsg && (
+        <div className="text-[13px] font-[family-name:var(--font-mono)] text-[var(--text-faint)] border border-dashed border-[var(--border)] rounded-[8px] px-3 py-2">
+          // {errorMsg}
+        </div>
+      )}
     </div>
   )
 }

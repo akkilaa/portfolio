@@ -27,21 +27,28 @@ const SEED_MESSAGES = [
   },
 ]
 
+// must match chatSchema messages .max() in ask.controller.ts
+const MAX_MESSAGES = 50
+
 const ChatPanel = () => {
+  const [errorMsg, setErrorMsg] = useState<string>()
   const { messages, sendMessage, status } = useChat({
     transport: new TextStreamChatTransport({
       api: `${BASE_URL}/ask`,
       prepareSendMessagesRequest: prepareAskRequest,
     }),
     messages: SEED_MESSAGES,
+    onError: (err) => setErrorMsg(err.message),
   })
   const [input, setInput] = useState('')
   const busy = status === 'submitted' || status === 'streaming'
+  const reachedLimit = messages.filter((m) => m.role !== 'system').length >= MAX_MESSAGES
 
   const submit = () => {
     const q = input.trim()
-    if (!q || busy) return
+    if (!q || busy || reachedLimit) return
     setInput('')
+    setErrorMsg(undefined)
     sendMessage({ text: q })
   }
 
@@ -54,7 +61,7 @@ const ChatPanel = () => {
 
       <ChatHeader />
 
-      <ChatBody messages={messages} busy={busy} />
+      <ChatBody messages={messages} busy={busy} errorMsg={errorMsg} limitReached={reachedLimit} />
 
       <div className="flex flex-wrap gap-1.5 pt-2.5 pb-3 border-t border-dashed border-[var(--border)]">
         {SUGGESTIONS.map((s) => (
@@ -64,9 +71,9 @@ const ChatPanel = () => {
             variant="bare"
             label={s}
             onClick={() => {
-              if (!busy) sendMessage({ text: s })
+              if (!busy && !reachedLimit) sendMessage({ text: s })
             }}
-            disabled={busy}
+            disabled={busy || reachedLimit}
           />
         ))}
       </div>
@@ -81,15 +88,15 @@ const ChatPanel = () => {
           variant="chat"
           prompt
           right={
-            <Button type="submit" variant="ghost" disabled={busy || !input.trim()}>
-              send ↵
+            <Button type="submit" variant="ghost" disabled={busy || reachedLimit || !input.trim()}>
+              <span className="hidden sm:inline">send&nbsp;</span>↵
             </Button>
           }
           aria-label="Ask about akkila"
-          placeholder="ask anything about akkila…"
+          placeholder={reachedLimit ? 'conversation limit reached' : 'ask anything about akkila…'}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          disabled={busy}
+          disabled={busy || reachedLimit}
         />
       </form>
     </div>
