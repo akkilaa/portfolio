@@ -15,6 +15,7 @@
     "@ai-sdk/openai-compatible": "^2.0.48",
     "@portfolio/db": "workspace:*",
     "@portfolio/shared": "workspace:*",
+    "@sentry/node": "^10.56.0",
     "ai": "^6.0.191",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",

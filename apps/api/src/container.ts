@@ -11,6 +11,7 @@ import type { UsersController } from '@api/controllers/users.controller'
 import type { RecommendationController } from '@api/controllers/recommendation.controller'
 import type { AskController } from '@api/controllers/ask.controller'
 import type { MediaController } from '@api/controllers/media.controller'
+import * as Sentry from '@sentry/node'
 import { errorHandler } from '@api/middlewares/error-handler'
 
 type Controllers = {
@@ -50,6 +51,7 @@ export function composeApp(controllers: Controllers): Express {
   }
 
   app.use('/v1', createV1Router(controllers))
+  Sentry.setupExpressErrorHandler(app)
   app.use(errorHandler)
 
   return app

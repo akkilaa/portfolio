@@ -1,3 +1,4 @@
+import './instrument.js'
 import path from 'node:path'
 import {
   createPrismaClient,

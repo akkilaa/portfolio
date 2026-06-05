@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next'
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import { withSentryConfig } from '@sentry/nextjs'
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: [process.env.NEXT_PUBLIC_LOCAL_IP!],
@@ -25,4 +26,10 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })(nextConfig)
+const bundleAnalyzed = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })(nextConfig)
+
+export default withSentryConfig(bundleAnalyzed, {
+  silent: true,
+  sourcemaps: { disable: true },
+  telemetry: false,
+})

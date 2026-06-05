@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { ZodError, z } from 'zod'
+import * as Sentry from '@sentry/node'
 import { AppError } from '@portfolio/shared'
 import { isPrismaValidationError, isPrismaError } from '@portfolio/db'
 
@@ -55,6 +56,7 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     return
   }
 
+  Sentry.captureException(err)
   console.error(err)
   res.status(500).json({ error: 'Internal server error' })
 }
