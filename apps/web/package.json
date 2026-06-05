@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.193",
+    "@microsoft/clarity": "^1.0.2",
     "@portfolio/shared": "workspace:*",
     "@types/github-slugger": "^2.0.0",
     "ai": "^6.0.191",

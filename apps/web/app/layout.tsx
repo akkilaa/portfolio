@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { SITE_META, personJsonLd } from '@/lib/site'
+import { ClarityScript } from '@/components/atoms/clarity'
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
@@ -24,7 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ClarityScript />
+        {children}
+      </body>
     </html>
   )
 }
