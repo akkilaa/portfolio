@@ -1,0 +1,217 @@
+{
+  "info": {
+    "name": "Portfolio – Media & Auth",
+    "_postman_id": "portfolio-media-auth",
+    "description": "Auth (magic-link flow) + Media upload/get/delete for the portfolio API.\n\n**Flow to get an access token:**\n1. Run **Login** — the API emails a magic-link (check Mailhog at http://localhost:1025 in dev).\n2. Copy the `?token=` value from the link and run **Verify** — this sets the `accessToken` cookie automatically.\n3. All media requests will now work (Postman sends the cookie automatically).\n\n**Shortcut in dev:** Run the *[Dev] Generate Access Token* request — it uses the JWT secret to mint a token directly and sets it as the `accessToken` cookie without going through email.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwtSecret",
+      "value": "",
+      "type": "string",
+      "description": "Dev only — never expose this in prod"
+    },
+    {
+      "key": "adminEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "mediaId",
+      "value": "",
+      "type": "string",
+      "description": "Populated automatically after a successful Upload request"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (sends magic link)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Triggers the magic-link email. Check Mailhog (http://localhost:1025) to grab the verify URL."
+          }
+        },
+        {
+          "name": "Verify (exchange magic-link token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Postman automatically stores the Set-Cookie headers in the cookie jar.",
+                  "// Nothing extra needed — subsequent requests in this collection will",
+                  "// send the accessToken cookie automatically.",
+                  "pm.test('Logged in', () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify?token=PASTE_TOKEN_HERE",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "PASTE_TOKEN_HERE",
+                  "description": "The token value from the magic-link URL"
+                }
+              ]
+            },
+            "description": "Exchange the magic-link token for an accessToken + refreshToken cookie pair."
+          }
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Uses the refreshToken cookie to issue a new accessToken. Postman sends the cookie automatically."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Upload image",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('mediaId', body.id);",
+                  "  console.log('mediaId set to', body.id);",
+                  "  console.log('URL:', body.url);",
+                  "}",
+                  "pm.test('Upload successful', () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "Image file (jpeg, png, webp, avif, gif, tiff). Stored as WebP.",
+                  "src": ""
+                },
+                {
+                  "key": "alt",
+                  "value": "",
+                  "type": "text",
+                  "description": "Optional alt text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/media",
+              "host": ["{{baseUrl}}"],
+              "path": ["media"]
+            },
+            "description": "Upload an image. The API converts it to WebP, deduplicates by SHA-256, and returns the asset record.\n\nResponse fields: `id`, `url`, `mime`, `width`, `height`, `sizeBytes`, `blurDataUrl`, `alt`, `createdAt`.\n\nThe `mediaId` collection variable is set automatically from the response."
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"id\": \"clx1234...\",\n  \"url\": \"http://localhost:3001/media/ab/abcdef....webp\",\n  \"mime\": \"image/webp\",\n  \"width\": 800,\n  \"height\": 600,\n  \"sizeBytes\": 34512,\n  \"blurDataUrl\": \"data:image/webp;base64,...\",\n  \"alt\": null,\n  \"createdAt\": \"2025-01-01T00:00:00.000Z\"\n}",
+              "_postman_previewlanguage": "json"
+            }
+          ]
+        },
+        {
+          "name": "Get by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/{{mediaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["media", "{{mediaId}}"]
+            },
+            "description": "Fetch a single media asset record by its ID. Uses `mediaId` collection variable (set automatically by Upload)."
+          }
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": ["pm.test('Deleted', () => pm.response.to.have.status(204));"],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/media/{{mediaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["media", "{{mediaId}}"]
+            },
+            "description": "Soft-delete a media asset. Returns 204 No Content on success."
+          }
+        }
+      ]
+    }
+  ]
+}
