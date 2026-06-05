@@ -114,6 +114,7 @@
   height: auto;
   border-radius: 14px;
   box-shadow: 0 4px 28px color-mix(in oklab, black 45%, transparent);
+  background: var(--surface-2);
 }
 
 .post-prose p:has(> img:only-child) {
@@ -160,6 +161,7 @@
   height: auto;
   border-radius: 20px;
   box-shadow: 0 8px 40px color-mix(in oklab, black 55%, transparent);
+  background: var(--surface-2);
 }
 
 /* app logo / square image — keep it compact */
@@ -175,6 +177,7 @@
   object-fit: contain;
   border-radius: 24px;
   box-shadow: 0 4px 20px color-mix(in oklab, black 40%, transparent);
+  background: #1a1a1a;
 }
 
 /* callout */
@@ -255,4 +258,17 @@
   border-radius: 14px;
   box-shadow: 0 32px 96px color-mix(in oklab, black 70%, transparent);
   cursor: default;
+}
+
+/* ==== light theme overrides ==== */
+[data-theme='light'] .post-prose img {
+  box-shadow: 0 2px 12px color-mix(in oklab, black 10%, transparent);
+}
+
+[data-theme='light'] .post-prose .screenshot-grid img {
+  box-shadow: 0 4px 20px color-mix(in oklab, black 12%, transparent);
+}
+
+[data-theme='light'] .post-prose .app-logo img {
+  box-shadow: 0 4px 16px color-mix(in oklab, black 14%, transparent);
 }
