@@ -1,4 +1,5 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!
+const DEFAULT_TIMEOUT_MS = 5000
 
 export class Api {
   constructor(
@@ -7,7 +8,11 @@ export class Api {
   ) {}
 
   get(path: string, init?: RequestInit): Promise<Response> {
-    return fetch(`${this.baseUrl}${path}`, { ...this.defaults, ...init })
+    return fetch(`${this.baseUrl}${path}`, {
+      signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS),
+      ...this.defaults,
+      ...init,
+    })
   }
 
   post(path: string, body: unknown, init?: RequestInit): Promise<Response> {
