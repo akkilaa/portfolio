@@ -18,7 +18,7 @@ RUN pnpm install --frozen-lockfile
 # ---- Build Next.js ----
 FROM base AS builder
 WORKDIR /app
-COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app .
 COPY --from=pruner /app/out/full/ .
 RUN pnpm --filter @portfolio/web run build
 
