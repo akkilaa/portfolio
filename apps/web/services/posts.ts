@@ -6,16 +6,24 @@ export type { PostDetailResponse, PostListItemResponse }
 const api = new Api()
 
 export async function getPosts(): Promise<PostListItemResponse[]> {
-  const res = await api.get('/posts', { next: { revalidate: 60 } })
-  if (!res.ok) return []
-  const data = (await res.json()) as PostListResponse
-  return data.items
+  try {
+    const res = await api.get('/posts', { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    const data = (await res.json()) as PostListResponse
+    return data.items
+  } catch {
+    return []
+  }
 }
 
 export async function getPost(slug: string): Promise<PostDetailResponse | null> {
-  const res = await api.get(`/posts/${slug}`, { next: { revalidate: 60 } })
-  if (!res.ok) return null
-  return res.json() as Promise<PostDetailResponse>
+  try {
+    const res = await api.get(`/posts/${slug}`, { next: { revalidate: 60 } })
+    if (!res.ok) return null
+    return res.json() as Promise<PostDetailResponse>
+  } catch {
+    return null
+  }
 }
 
 export async function getAllSlugs(): Promise<string[]> {

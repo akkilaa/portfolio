@@ -10,10 +10,14 @@ type RecommendationListResponse = {
 const api = new Api()
 
 export async function getRecommendations(): Promise<RecommendationWithAuthor[]> {
-  const res = await api.get('/recommendations', { next: { revalidate: 60 } })
-  if (!res.ok) return []
-  const data = (await res.json()) as RecommendationListResponse
-  return data.items
+  try {
+    const res = await api.get('/recommendations', { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    const data = (await res.json()) as RecommendationListResponse
+    return data.items
+  } catch {
+    return []
+  }
 }
 
 export async function getRecommendationAuthor(): Promise<RecommendationMeResponse | null> {

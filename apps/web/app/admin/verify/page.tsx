@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { adminVerify } from '@/services/admin'
 
-export default function AdminVerifyPage() {
+function AdminVerify() {
   const router = useRouter()
   const params = useSearchParams()
   const [error, setError] = useState('')
@@ -46,5 +46,13 @@ export default function AdminVerifyPage() {
         verifying…
       </p>
     </div>
+  )
+}
+
+export default function AdminVerifyPage() {
+  return (
+    <Suspense>
+      <AdminVerify />
+    </Suspense>
   )
 }

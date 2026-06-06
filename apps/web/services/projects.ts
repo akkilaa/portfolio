@@ -6,22 +6,34 @@ export type { ProjectDetailResponse }
 const api = new Api()
 
 export async function getProjects(): Promise<ProjectDetailResponse[]> {
-  const res = await api.get('/projects?limit=100', { next: { revalidate: 60 } })
-  if (!res.ok) return []
-  const data = (await res.json()) as ProjectListResponse
-  return data.items
+  try {
+    const res = await api.get('/projects?limit=100', { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    const data = (await res.json()) as ProjectListResponse
+    return data.items
+  } catch {
+    return []
+  }
 }
 
 export async function getProject(slug: string): Promise<ProjectDetailResponse | null> {
-  const res = await api.get(`/projects/${slug}`, { next: { revalidate: 60 } })
-  if (!res.ok) return null
-  return res.json() as Promise<ProjectDetailResponse>
+  try {
+    const res = await api.get(`/projects/${slug}`, { next: { revalidate: 60 } })
+    if (!res.ok) return null
+    return res.json() as Promise<ProjectDetailResponse>
+  } catch {
+    return null
+  }
 }
 
 export async function getFeaturedProjects(): Promise<ProjectDetailResponse[]> {
-  const res = await api.get('/projects/featured', { next: { revalidate: 60 } })
-  if (!res.ok) return []
-  return res.json() as Promise<ProjectDetailResponse[]>
+  try {
+    const res = await api.get('/projects/featured', { next: { revalidate: 60 } })
+    if (!res.ok) return []
+    return res.json() as Promise<ProjectDetailResponse[]>
+  } catch {
+    return []
+  }
 }
 
 export async function getAllProjectSlugs(): Promise<string[]> {

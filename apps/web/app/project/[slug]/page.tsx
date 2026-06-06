@@ -11,8 +11,12 @@ import { SITE_URL, SITE_AUTHOR } from '@/lib/site'
 export const revalidate = 60
 
 export async function generateStaticParams() {
-  const slugs = await getAllProjectSlugs()
-  return slugs.map((slug) => ({ slug }))
+  try {
+    const slugs = await getAllProjectSlugs()
+    return slugs.map((slug) => ({ slug }))
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
