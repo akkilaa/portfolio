@@ -20,7 +20,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=installer /app .
 COPY --from=pruner /app/out/full/ .
-RUN pnpm --filter @portfolio/web run build
+RUN pnpm turbo build
 
 # ---- Minimal runtime image ----
 FROM node:22-alpine AS runner
