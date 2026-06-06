@@ -36,6 +36,7 @@ services:
 
   portfolio_api:
     image: portfolio_api:latest
+    container_name: portfolio_api
     build:
       context: .
       dockerfile: apps/api/Dockerfile
@@ -56,6 +57,7 @@ services:
 
   portfolio_web:
     image: portfolio_web:latest
+    container_name: portfolio_web
     build:
       context: .
       dockerfile: apps/web/Dockerfile
