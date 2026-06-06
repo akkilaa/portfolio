@@ -18,6 +18,10 @@ RUN pnpm install --frozen-lockfile
 # ---- Build Next.js ----
 FROM base AS builder
 WORKDIR /app
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_API_URL_ORIGIN
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL_ORIGIN=$NEXT_PUBLIC_API_URL_ORIGIN
 COPY --from=installer /app .
 COPY --from=pruner /app/out/full/ .
 COPY --from=pruner /app/tsconfig.base.json .
