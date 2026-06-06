@@ -9,3 +9,4 @@ packages/db/prisma/src/generated
 # Locally stored media (local-disk storage adapter)
 var/
 apps/api/var/
+out/

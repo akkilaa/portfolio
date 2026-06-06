@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build API image
+        run: docker build -t portfolio-api:latest -f apps/api/Dockerfile .
+
+      - name: Build Web image
+        run: docker build -t portfolio-web:latest -f apps/web/Dockerfile .
+
+      - name: Deploy
+        run: docker compose -f /apps/portfolio/compose.yml up -d

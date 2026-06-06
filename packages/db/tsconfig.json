@@ -2,13 +2,14 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": ".",
+    "rootDir": "src",
+    "declaration": true,
     "paths": {
       "@db": ["./src/index"],
       "@db/client": ["./prisma/src/generated/prisma"],
       "@db/*": ["./src/*"]
     }
   },
-  "include": ["src", "prisma"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

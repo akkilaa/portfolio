@@ -1,8 +1,12 @@
+import path from 'node:path'
 import type { NextConfig } from 'next'
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import { withSentryConfig } from '@sentry/nextjs'
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+  // Traces files from the monorepo root so workspace packages are included
+  outputFileTracingRoot: path.join(__dirname, '../..'),
   allowedDevOrigins: [process.env.NEXT_PUBLIC_LOCAL_IP!],
   images: {
     // Skip optimization in dev — Next.js 15+ blocks localhost (private IP) in the optimizer

@@ -1,13 +1,73 @@
 services:
-  db:
+  portfolio_db:
     image: postgres:16-alpine
     restart: unless-stopped
     env_file:
-      - ./packages/db/.env
-    ports:
-      - '5432:5432'
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - backend-net
+
+  migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command:
+      - sh
+      - -c
+      - pnpm --filter @portfolio/db run db:deploy
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@portfolio_db:5432/${POSTGRES_DB}
+    depends_on:
+      portfolio_db:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - backend-net
+
+  portfolio_api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - PORT=3001
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@portfolio_db:5432/${POSTGRES_DB}
+    depends_on:
+      portfolio_db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    networks:
+      - backend-net
+      - proxy-net
+
+  portfolio_web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - portfolio_api
+    restart: unless-stopped
+    networks:
+      - proxy-net
 
 volumes:
   postgres_data:
+
+networks:
+  backend-net:
+  proxy-net:
+    external: true

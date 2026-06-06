@@ -1,0 +1,14 @@
+.git
+.github
+.claude
+node_modules
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+**/coverage
+docs
+postman
+memory
+*.postman_collection.json
+todo.txt
