@@ -1,4 +1,4 @@
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
+export const SITE_URL = process.env.NEXT_PUBLIC_API_URL_ORIGIN
 
 export const SITE_AUTHOR = {
   name: 'Aleksa Janjic',
