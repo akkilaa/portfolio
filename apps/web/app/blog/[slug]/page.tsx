@@ -23,7 +23,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const post = await getPost(slug)
   if (!post) return {}
-  return { title: `${post.title} — akkila.dev`, description: post.excerpt }
+  const url = `${SITE_URL}/blog/${post.slug}`
+  const image = post.coverImage ?? undefined
+  return {
+    title: `${post.title} — akkila.dev`,
+    description: post.excerpt,
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
+      authors: [SITE_AUTHOR.name],
+      ...(image && { images: [{ url: image }] }),
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title: post.title,
+      description: post.excerpt,
+      ...(image && { images: [image] }),
+    },
+  }
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {

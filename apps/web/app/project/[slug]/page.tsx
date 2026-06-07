@@ -23,7 +23,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   const project = await getProject(slug)
   if (!project) return {}
-  return { title: `${project.title} — akkila.dev`, description: project.shortDescription }
+  const url = `${SITE_URL}/project/${project.slug}`
+  const image = project.images?.[0]?.url ?? undefined
+  return {
+    title: `${project.title} — akkila.dev`,
+    description: project.shortDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      title: project.title,
+      description: project.shortDescription,
+      url,
+      type: 'website',
+      ...(image && { images: [{ url: image }] }),
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title: project.title,
+      description: project.shortDescription,
+      ...(image && { images: [image] }),
+    },
+  }
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
