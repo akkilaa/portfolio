@@ -34,6 +34,14 @@ export class Api {
       ...init,
     })
   }
+
+  del(path: string, init?: RequestInit): Promise<Response> {
+    return fetch(`${this.baseUrl}${path}`, {
+      method: 'DELETE',
+      ...this.defaults,
+      ...init,
+    })
+  }
 }
 
 export { BASE_URL }

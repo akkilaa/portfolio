@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import type { ProjectResponse } from '@portfolio/shared'
 import Button from '@/components/atoms/Button'
 import {
@@ -119,10 +120,24 @@ const AdminProjectsShell = () => {
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <header className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)] bg-[var(--surface)] shrink-0">
-        <span className="font-[family-name:var(--font-mono)] text-sm">
-          <span className="text-[var(--text-faint)]">~/</span>
-          <span className="text-[var(--text-bright)]">admin</span>
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="font-[family-name:var(--font-mono)] text-sm">
+            <span className="text-[var(--text-faint)]">~/</span>
+            <span className="text-[var(--text-bright)]">admin</span>
+          </span>
+          <nav className="flex items-center gap-1">
+            <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--accent)] px-2 py-1">
+              projects
+            </span>
+            <span className="text-[var(--border-strong)]">/</span>
+            <Link
+              href="/admin/recommendations"
+              className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--text-dim)] hover:text-[var(--accent)] px-2 py-1 rounded transition-colors"
+            >
+              recommendations
+            </Link>
+          </nav>
+        </div>
         <Button variant="plain" onClick={handleLogout}>
           logout
         </Button>
