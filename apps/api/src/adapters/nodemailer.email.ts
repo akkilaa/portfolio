@@ -5,8 +5,8 @@ export class NodemailerEmailService implements IEmailService {
   private transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST ?? 'localhost',
     port: Number(process.env.SMTP_PORT ?? 1025),
-    secure: process.env.NODE_ENV === 'production',
-    ignoreTLS: process.env.NODE_ENV !== 'production',
+    secure: process.env.SMTP_SECURE === 'true',
+    ignoreTLS: process.env.SMTP_IGNORE_TLS === 'true',
   })
 
   async sendMagicLink(to: string, link: string): Promise<void> {
