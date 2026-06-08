@@ -15,7 +15,7 @@ jobs:
         run: docker build -t portfolio_api:latest -f apps/api/Dockerfile .
 
       - name: Build Web image
-        run: docker build -t portfolio_web:latest -f apps/web/Dockerfile --build-arg NEXT_PUBLIC_API_URL=https://akkila.dev/v1 --build-arg NEXT_PUBLIC_API_URL_ORIGIN=https://akkila.dev .
+        run: docker build -t portfolio_web:latest -f apps/web/Dockerfile --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} --build-arg NEXT_PUBLIC_API_URL_ORIGIN=${{ secrets.NEXT_PUBLIC_API_URL_ORIGIN }} --build-arg NEXT_PUBLIC_CLARITY_PROJECT_ID=${{ secrets.NEXT_PUBLIC_CLARITY_PROJECT_ID }} .
 
       - name: Deploy
         run: docker compose -f /apps/portfolio/compose.yml up -d --no-build

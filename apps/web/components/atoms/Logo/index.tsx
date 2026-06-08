@@ -4,7 +4,7 @@ const Logo = () => {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2.5 font-mono text-[15px] font-semibold tracking-tight text-white no-underline"
+      className="flex items-center gap-2.5 font-mono text-[15px] font-semibold tracking-tight text-[var(--text-bright)] no-underline"
     >
       <span
         className="size-2 shrink-0 rounded-full bg-[var(--accent)] shadow-[0_0_12px_var(--accent-glow)] animate-[pulse_2.4s_ease-in-out_infinite]"

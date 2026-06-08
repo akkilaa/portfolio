@@ -24,6 +24,7 @@ ARG NEXT_PUBLIC_CLARITY_PROJECT_ID
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL_ORIGIN=$NEXT_PUBLIC_API_URL_ORIGIN
 ENV NEXT_PUBLIC_CLARITY_PROJECT_ID=$NEXT_PUBLIC_CLARITY_PROJECT_ID
+
 COPY --from=installer /app .
 COPY --from=pruner /app/out/full/ .
 COPY --from=pruner /app/tsconfig.base.json .
@@ -41,6 +42,7 @@ COPY --from=builder /app/apps/web/public ./apps/web/public
 
 EXPOSE 3000
 ENV NODE_ENV=production
+
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 CMD ["node", "apps/web/server.js"]
