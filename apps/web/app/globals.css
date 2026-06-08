@@ -68,6 +68,15 @@ a {
   color: #000;
 }
 
+/* ==== ios input zoom fix ==== */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* ==== reduced motion ==== */
 @media (prefers-reduced-motion: reduce) {
   *,
