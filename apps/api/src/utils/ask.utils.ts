@@ -1,5 +1,3 @@
-import { SYSTEM_PROMPT } from '@api/constants/ai'
-
 type Message = { role: 'user' | 'assistant'; content: string }
 
 export function dropConsecutiveDuplicateRolesStartingWithUser(messages: Message[]): Message[] {
@@ -31,12 +29,4 @@ export function appendConcisenessReminderToLastUserMessage(messages: Message[]):
         }
       : msg,
   )
-}
-
-export function injectSystemPromptIntoFirstUserMessage(messages: Message[]): Message[] {
-  if (messages[0]?.role !== 'user') return messages
-  return [
-    { ...messages[0], content: `${SYSTEM_PROMPT.trim()}\n\n${messages[0].content}` },
-    ...messages.slice(1),
-  ]
 }

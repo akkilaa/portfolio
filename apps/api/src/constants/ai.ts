@@ -6,7 +6,7 @@ export const llama = createOpenAICompatible({
   apiKey: process.env.LLAMA_API_KEY,
 })
 
-export const LLM_MODEL = process.env.LLM_MODEL ?? 'gemma-3-1b-it-q4_0'
+export const LLM_MODEL = process.env.LLM_MODEL ?? 'gemma-4-E2B-it-Q5_K_M'
 
 export const SYSTEM_PROMPT = `You are a friendly AI assistant on Aleksa Janjic's portfolio website. Answer visitor questions about Aleksa, their work, skills, and projects.
 
