@@ -7,6 +7,8 @@ import Button from '@/components/atoms/Button'
 import Input from '@/components/molecules/Input'
 import { submitContact } from '@/services/contact'
 
+const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL
+
 const ERROR_MESSAGES: Record<string, string> = {
   rate_limited: 'too many requests — wait a moment and try again',
   validation: 'invalid submission — check your details',
@@ -65,8 +67,8 @@ const Contact = () => {
               { key: 'location', val: 'Belgrade, RS · GMT+1' },
               { key: 'status', val: 'accepting work · Q3 2026', accent: true },
               { key: 'stack', val: 'TS / Next / Postgres / LLMs' },
-              { key: 'github', val: '@akkila' },
-              { key: 'linkedin', val: 'in/akkila' },
+              { key: 'github', val: '@akkilaa' },
+              { key: 'linkedin', val: 'in/aleksa-janjic' },
             ].map(({ key, val, accent }) => (
               <div
                 key={key}
@@ -79,9 +81,23 @@ const Contact = () => {
               </div>
             ))}
           </div>
-          <p className="font-[family-name:var(--font-sans)] text-[13px] text-[var(--text-dim)] max-w-[36ch] leading-[1.6]">
-            Best for: fullstack product work, AI integrations, self-hosted deployments.
-          </p>
+          {calendlyUrl && (
+            <div className="flex flex-col gap-1.5">
+              <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-faint)] tracking-[0.04em]">
+                prefer a call?
+              </span>
+              <Button
+                as={Link}
+                href={calendlyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="default"
+                className="self-start"
+              >
+                schedule a 30-min call
+              </Button>
+            </div>
+          )}
         </div>
 
         <form
