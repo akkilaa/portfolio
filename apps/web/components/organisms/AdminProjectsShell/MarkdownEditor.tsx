@@ -7,9 +7,14 @@ import remarkGfm from 'remark-gfm'
 interface MarkdownEditorProps {
   value: string
   onChange: (value: string) => void
+  label?: string
 }
 
-const MarkdownEditor = ({ value, onChange }: MarkdownEditorProps) => {
+const MarkdownEditor = ({
+  value,
+  onChange,
+  label = 'description (markdown)',
+}: MarkdownEditorProps) => {
   const [preview, setPreview] = useState(false)
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -28,7 +33,7 @@ const MarkdownEditor = ({ value, onChange }: MarkdownEditorProps) => {
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--text-faint)] uppercase tracking-wider">
-          description (markdown)
+          {label}
         </span>
         <div className="flex rounded-lg overflow-hidden border border-[var(--border)]">
           {(['edit', 'preview'] as const).map((mode) => (

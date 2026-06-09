@@ -16,6 +16,7 @@ export const CreatePostSchema = z.object({
   contentMd: z.string().min(1).max(100_000),
   authorId: z.string().min(1),
   coverImage: z.string().min(1).max(500).optional(),
+  tagSlugs: z.array(z.string().min(1).max(100)).max(20).optional(),
 })
 
 export const UpdatePostSchema = CreatePostSchema.omit({ authorId: true }).partial()

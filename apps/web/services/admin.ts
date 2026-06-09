@@ -1,6 +1,8 @@
 import type {
   AdminProjectListResponse,
   ProjectResponse,
+  AdminPostListResponse,
+  PostResponse,
   AdminRecommendationListResponse,
   RecommendationResponse,
   RecommendationStatus,
@@ -45,6 +47,36 @@ export async function adminFeatureProject(id: string): Promise<ProjectResponse> 
 
 export async function adminUnfeatureProject(id: string): Promise<ProjectResponse> {
   return expect<ProjectResponse>(await api.patch(`/projects/${id}/unfeature`, {}))
+}
+
+export async function adminGetMe(): Promise<{ id: string; role: string }> {
+  return expect<{ id: string; role: string }>(await api.get('/auth/me'))
+}
+
+export async function adminGetPosts(): Promise<PostResponse[]> {
+  const res = await api.get('/posts/admin?limit=100')
+  if (!res.ok) return []
+  const data = (await res.json()) as AdminPostListResponse
+  return data.items
+}
+
+export async function adminUpdatePost(
+  id: string,
+  body: Record<string, unknown>,
+): Promise<PostResponse> {
+  return expect<PostResponse>(await api.patch(`/posts/${id}`, body))
+}
+
+export async function adminCreatePost(body: Record<string, unknown>): Promise<PostResponse> {
+  return expect<PostResponse>(await api.post('/posts', body))
+}
+
+export async function adminPublishPost(id: string): Promise<PostResponse> {
+  return expect<PostResponse>(await api.patch(`/posts/${id}/publish`, {}))
+}
+
+export async function adminUnpublishPost(id: string): Promise<PostResponse> {
+  return expect<PostResponse>(await api.patch(`/posts/${id}/unpublish`, {}))
 }
 
 export async function adminGetRecommendations(

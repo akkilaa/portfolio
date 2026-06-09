@@ -14,10 +14,10 @@ export interface IPostRepository {
   slugExists(slug: string): Promise<boolean>
   findById(id: string): Promise<Post | null>
   findPublished(opts: PaginationOpts & { tag?: string }): Promise<Paginated<PostSummary>>
-  findAll(opts: AdminListOpts): Promise<Paginated<Post>>
-  create(data: CreatePostInput): Promise<Post>
-  update(id: string, data: UpdatePostInput): Promise<Post>
+  findAll(opts: AdminListOpts): Promise<Paginated<PostWithTags>>
+  create(data: CreatePostInput): Promise<PostWithTags>
+  update(id: string, data: UpdatePostInput): Promise<PostWithTags>
   delete(id: string): Promise<void>
-  publish(id: string): Promise<Post>
-  unpublish(id: string): Promise<Post>
+  publish(id: string): Promise<PostWithTags>
+  unpublish(id: string): Promise<PostWithTags>
 }

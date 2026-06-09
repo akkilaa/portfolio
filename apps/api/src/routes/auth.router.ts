@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { AUTH_ROUTES } from '@api/constants/routes'
 import { validate } from '@api/middlewares/validate'
 import { LoginSchema } from '@api/schemas/auth.schema'
+import { requireAuth } from '@api/middlewares/auth.middleware'
 import type { AuthController } from '@api/controllers/auth.controller'
 
 export function createAuthRouter(controller: AuthController): Router {
@@ -11,6 +12,7 @@ export function createAuthRouter(controller: AuthController): Router {
   router.get(AUTH_ROUTES.VERIFY, controller.verify)
   router.post(AUTH_ROUTES.REFRESH, controller.refresh)
   router.post(AUTH_ROUTES.LOGOUT, controller.logout)
+  router.get(AUTH_ROUTES.ME, requireAuth, controller.me)
 
   // OAuth callbacks registered before the redirect initiators (more specific path first)
   router.get(AUTH_ROUTES.GITHUB_CALLBACK, controller.githubCallback)

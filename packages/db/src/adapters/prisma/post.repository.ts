@@ -14,6 +14,11 @@ import { isPrismaError, isPrismaValidationError } from '../../utils'
 
 const tagInclude = { postTags: { include: { tag: true } } }
 
+function tagConnectOrCreate(slug: string) {
+  const label = slug.replace(/-/g, ' ')
+  return { where: { slug }, create: { slug, label } }
+}
+
 function mapTags(
   postTags: { tag: { id: string; slug: string; label: string; color: string | null } }[],
 ) {
@@ -82,23 +87,44 @@ export class PrismaPostRepository {
     limit = 20,
     cursor,
     includeDeleted = false,
-  }: AdminListOpts): Promise<Paginated<Post>> {
+  }: AdminListOpts): Promise<Paginated<PostWithTags>> {
     const rows = await this.db.post.findMany({
       where: includeDeleted ? {} : { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       take: limit + 1,
       cursor: cursor ? { id: cursor } : undefined,
       skip: cursor ? 1 : 0,
+      include: tagInclude,
     })
 
     const hasMore = rows.length > limit
     const items = hasMore ? rows.slice(0, limit) : rows
-    return { items, nextCursor: hasMore ? items[items.length - 1].id : null }
+    return {
+      items: items.map(({ postTags, ...p }) => ({ ...p, tags: mapTags(postTags) })),
+      nextCursor: hasMore ? items[items.length - 1].id : null,
+    }
   }
 
-  async create(data: CreatePostInput): Promise<Post> {
+  async create(data: CreatePostInput): Promise<PostWithTags> {
+    const { tagSlugs, ...rest } = data
     try {
-      return await this.db.post.create({ data })
+      const row = await this.db.post.create({
+        data: {
+          ...rest,
+          ...(tagSlugs?.length
+            ? {
+                postTags: {
+                  create: tagSlugs.map((slug) => ({
+                    tag: { connectOrCreate: tagConnectOrCreate(slug) },
+                  })),
+                },
+              }
+            : {}),
+        },
+        include: tagInclude,
+      })
+      const { postTags, ...post } = row
+      return { ...post, tags: mapTags(postTags) }
     } catch (e) {
       if (isPrismaValidationError(e)) throw new ValidationError('Invalid data provided')
       if (isPrismaError(e, 'P2003'))
@@ -110,19 +136,50 @@ export class PrismaPostRepository {
     }
   }
 
-  update(id: string, data: UpdatePostInput): Promise<Post> {
-    return this.db.post.update({ where: { id }, data })
+  async update(id: string, data: UpdatePostInput): Promise<PostWithTags> {
+    const { tagSlugs, ...rest } = data
+    const row = await this.db.post.update({
+      where: { id },
+      data: {
+        ...rest,
+        ...(tagSlugs
+          ? {
+              postTags: {
+                deleteMany: {},
+                create: tagSlugs.map((slug) => ({
+                  tag: { connectOrCreate: tagConnectOrCreate(slug) },
+                })),
+              },
+            }
+          : {}),
+      },
+      include: tagInclude,
+    })
+    const { postTags, ...post } = row
+    return { ...post, tags: mapTags(postTags) }
   }
 
   async delete(id: string): Promise<void> {
     await this.db.post.update({ where: { id }, data: { deletedAt: new Date() } })
   }
 
-  publish(id: string): Promise<Post> {
-    return this.db.post.update({ where: { id }, data: { publishedAt: new Date() } })
+  async publish(id: string): Promise<PostWithTags> {
+    const row = await this.db.post.update({
+      where: { id },
+      data: { publishedAt: new Date() },
+      include: tagInclude,
+    })
+    const { postTags, ...post } = row
+    return { ...post, tags: mapTags(postTags) }
   }
 
-  unpublish(id: string): Promise<Post> {
-    return this.db.post.update({ where: { id }, data: { publishedAt: null } })
+  async unpublish(id: string): Promise<PostWithTags> {
+    const row = await this.db.post.update({
+      where: { id },
+      data: { publishedAt: null },
+      include: tagInclude,
+    })
+    const { postTags, ...post } = row
+    return { ...post, tags: mapTags(postTags) }
   }
 }

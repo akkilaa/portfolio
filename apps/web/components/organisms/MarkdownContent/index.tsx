@@ -22,13 +22,22 @@ function makePre(highlighter: Highlighter) {
 
     const code = String(childProps.children ?? '').replace(/\n$/, '')
 
-    const html = highlighter
-      .codeToHtml(code, {
-        lang,
-        theme: 'houston',
-        transformers: [codeBlockTransformer],
-      })
-      .replace(/#4BF3C8/gi, 'var(--accent)')
+    let html: string
+    try {
+      html = highlighter
+        .codeToHtml(code, {
+          lang,
+          theme: 'houston',
+          transformers: [codeBlockTransformer],
+        })
+        .replace(/#4BF3C8/gi, 'var(--accent)')
+    } catch {
+      html = highlighter
+        .codeToHtml(code, { lang: 'text', theme: 'houston', transformers: [codeBlockTransformer] })
+        .replace(/#4BF3C8/gi, 'var(--accent)')
+    }
+
+    const codeBg = /background-color:([^;'"<>\s]+)/.exec(html)?.[1] ?? ''
 
     return (
       <div className="rounded-[8px] border border-[var(--border)] overflow-hidden my-[1.4em]">
@@ -39,7 +48,11 @@ function makePre(highlighter: Highlighter) {
           </div>
           <CopyButton code={code} />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: html }} />
+        <div
+          className="overflow-x-auto"
+          style={codeBg ? { backgroundColor: codeBg } : undefined}
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       </div>
     )
   }

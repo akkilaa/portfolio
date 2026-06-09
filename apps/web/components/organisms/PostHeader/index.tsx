@@ -36,6 +36,12 @@ const PostHeader = ({ post }: { post: PostDetailResponse }) => {
         <span className="text-[var(--text-faint)]">·</span>
         <span>{post.readingMinutes} min read</span>
       </div>
+
+      {post.coverImage && (
+        <div className="mt-8 rounded-xl overflow-hidden">
+          <img src={post.coverImage} alt={post.title} className="w-full h-auto block" />
+        </div>
+      )}
     </header>
   )
 }

@@ -1,4 +1,5 @@
 import type { Post, PostWithTags, PostSummary } from '../domain/post'
+import type { Tag } from '../domain/tag'
 
 export interface PostResponse extends Omit<
   Post,
@@ -7,6 +8,7 @@ export interface PostResponse extends Omit<
   publishedAt: string | null
   createdAt: string
   updatedAt: string
+  tags: Tag[]
 }
 
 export interface PostDetailResponse extends Omit<

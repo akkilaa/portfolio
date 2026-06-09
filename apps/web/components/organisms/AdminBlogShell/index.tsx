@@ -3,43 +3,55 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { ProjectResponse } from '@portfolio/shared'
+import type { PostResponse } from '@portfolio/shared'
 import Button from '@/components/atoms/Button'
 import {
-  adminGetProjects,
-  adminUpdateProject,
-  adminPublishProject,
-  adminUnpublishProject,
-  adminFeatureProject,
-  adminUnfeatureProject,
+  adminGetMe,
+  adminGetPosts,
+  adminCreatePost,
+  adminUpdatePost,
+  adminPublishPost,
+  adminUnpublishPost,
   adminLogout,
 } from '@/services/admin'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
-import ProjectList from './ProjectList'
-import ProjectEditor, { type EditorState, projectToEditor } from './ProjectEditor'
+import PostList from './PostList'
+import PostEditor, { type EditorState, postToEditor, emptyEditor } from './PostEditor'
 
-const AdminProjectsShell = () => {
+const AdminBlogShell = () => {
   const router = useRouter()
-  const [projects, setProjects] = useState<ProjectResponse[]>([])
-  const [selected, setSelected] = useState<ProjectResponse | null>(null)
+  const [posts, setPosts] = useState<PostResponse[]>([])
+  const [selected, setSelected] = useState<PostResponse | null>(null)
   const [editor, setEditor] = useState<EditorState | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState('')
   const [saved, setSaved] = useState(false)
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const load = useCallback(async () => {
-    const items = await adminGetProjects()
-    setProjects(items)
+    const [items, me] = await Promise.all([adminGetPosts(), adminGetMe()])
+    setPosts(items)
+    setCurrentUserId(me.id)
   }, [])
 
   useEffect(() => {
     load().catch(() => router.push('/admin/login'))
   }, [load, router])
 
-  function selectProject(p: ProjectResponse) {
+  function selectPost(p: PostResponse) {
+    setIsCreating(false)
     setSelected(p)
-    setEditor(projectToEditor(p))
+    setEditor(postToEditor(p))
+    setSaveError('')
+    setSaved(false)
+  }
+
+  function startNew() {
+    setIsCreating(true)
+    setSelected(null)
+    setEditor(emptyEditor())
     setSaveError('')
     setSaved(false)
   }
@@ -55,30 +67,51 @@ const AdminProjectsShell = () => {
     savedTimer.current = setTimeout(() => setSaved(false), 2000)
   }
 
-  function syncProject(updated: ProjectResponse) {
+  function syncPost(updated: PostResponse) {
     setSelected(updated)
-    setProjects((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
+    setIsCreating(false)
+    setPosts((prev) => {
+      const exists = prev.some((p) => p.id === updated.id)
+      return exists ? prev.map((p) => (p.id === updated.id ? updated : p)) : [updated, ...prev]
+    })
   }
 
   async function handleSave() {
-    if (!selected || !editor) return
+    if (!editor) return
     setSaving(true)
     setSaveError('')
     try {
-      const updated = await adminUpdateProject(selected.id, {
-        title: editor.title,
-        slug: editor.slug,
-        tagline: editor.tagline || null,
-        shortDescription: editor.shortDescription,
-        descriptionMd: editor.descriptionMd,
-        liveUrl: editor.liveUrl || null,
-        repoUrl: editor.repoUrl || null,
-        role: editor.role || null,
-        startedAt: editor.startedAt ? `${editor.startedAt}T00:00:00.000Z` : null,
-        endedAt: editor.endedAt ? `${editor.endedAt}T00:00:00.000Z` : null,
-      })
-      syncProject(updated)
-      flashSaved()
+      const tagSlugs = editor.tags
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+
+      if (isCreating) {
+        if (!currentUserId) throw new Error('User not loaded')
+        const created = await adminCreatePost({
+          title: editor.title,
+          slug: editor.slug,
+          excerpt: editor.excerpt,
+          contentMd: editor.contentMd,
+          authorId: currentUserId,
+          ...(editor.coverImage ? { coverImage: editor.coverImage } : {}),
+          ...(tagSlugs.length ? { tagSlugs } : {}),
+        })
+        syncPost(created)
+        flashSaved()
+      } else {
+        if (!selected) return
+        const updated = await adminUpdatePost(selected.id, {
+          title: editor.title,
+          slug: editor.slug,
+          excerpt: editor.excerpt,
+          contentMd: editor.contentMd,
+          coverImage: editor.coverImage || null,
+          tagSlugs,
+        })
+        syncPost(updated)
+        flashSaved()
+      }
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Save failed')
     } finally {
@@ -91,22 +124,11 @@ const AdminProjectsShell = () => {
   async function handleTogglePublish() {
     if (!selected) return
     try {
-      const updated = selected.published
-        ? await adminUnpublishProject(selected.id)
-        : await adminPublishProject(selected.id)
-      syncProject(updated)
-    } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Action failed')
-    }
-  }
-
-  async function handleToggleFeatured() {
-    if (!selected) return
-    try {
-      const updated = selected.featured
-        ? await adminUnfeatureProject(selected.id)
-        : await adminFeatureProject(selected.id)
-      syncProject(updated)
+      const published = selected.publishedAt !== null
+      const updated = published
+        ? await adminUnpublishPost(selected.id)
+        : await adminPublishPost(selected.id)
+      syncPost(updated)
     } catch (err) {
       setSaveError(err instanceof Error ? err.message : 'Action failed')
     }
@@ -117,6 +139,8 @@ const AdminProjectsShell = () => {
     router.push('/admin/login')
   }
 
+  const showEditor = editor !== null && (isCreating || selected !== null)
+
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <header className="flex items-center justify-between px-6 py-3 border-b border-[var(--border)] bg-[var(--surface)] shrink-0">
@@ -126,16 +150,16 @@ const AdminProjectsShell = () => {
             <span className="text-[var(--text-bright)]">admin</span>
           </span>
           <nav className="flex items-center gap-1">
-            <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--accent)] px-2 py-1">
-              projects
-            </span>
-            <span className="text-[var(--border-strong)]">/</span>
             <Link
-              href="/admin/blog"
+              href="/admin"
               className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--text-dim)] hover:text-[var(--accent)] px-2 py-1 rounded transition-colors"
             >
-              blog
+              projects
             </Link>
+            <span className="text-[var(--border-strong)]">/</span>
+            <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--accent)] px-2 py-1">
+              blog
+            </span>
             <span className="text-[var(--border-strong)]">/</span>
             <Link
               href="/admin/recommendations"
@@ -151,28 +175,29 @@ const AdminProjectsShell = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <ProjectList
-          projects={projects}
+        <PostList
+          posts={posts}
           selectedId={selected?.id ?? null}
-          onSelect={selectProject}
+          isCreating={isCreating}
+          onSelect={selectPost}
+          onNew={startNew}
         />
 
-        {editor && selected ? (
-          <ProjectEditor
-            project={selected}
+        {showEditor ? (
+          <PostEditor
+            post={selected}
             editor={editor}
             saving={saving}
             saved={saved}
             error={saveError}
             onChange={updateField}
             onSave={handleSave}
-            onTogglePublish={handleTogglePublish}
-            onToggleFeatured={handleToggleFeatured}
+            onTogglePublish={isCreating ? undefined : handleTogglePublish}
           />
         ) : (
           <main className="flex-1 flex items-center justify-center">
             <p className="font-[family-name:var(--font-mono)] text-sm text-[var(--text-faint)]">
-              select a project to edit
+              select a post to edit
             </p>
           </main>
         )}
@@ -181,4 +206,4 @@ const AdminProjectsShell = () => {
   )
 }
 
-export default AdminProjectsShell
+export default AdminBlogShell

@@ -21,6 +21,13 @@ export function getHighlighter(): Promise<Highlighter> {
         'markdown',
         'python',
         'rust',
+        'ini',
+        'toml',
+        'dockerfile',
+        'go',
+        'diff',
+        'xml',
+        'text',
       ],
     })
   }

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import type { AuthService } from '@api/services/auth.service'
 import type { GithubOAuthService } from '@api/services/github-oauth.service'
 import type { LinkedInOAuthService } from '@api/services/linkedin-oauth.service'
+import type { AuthenticatedRequest } from '@api/types/express'
 import type { LoginInput } from '@api/schemas/auth.schema'
 import { BadRequestError } from '@portfolio/shared'
 
@@ -100,6 +101,11 @@ export class AuthController {
     } catch (err) {
       next(err)
     }
+  }
+
+  me = (req: Request, res: Response) => {
+    const { id, role } = (req as AuthenticatedRequest).user
+    res.json({ id, role })
   }
 
   logout = (_req: Request, res: Response) => {

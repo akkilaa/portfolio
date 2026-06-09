@@ -260,7 +260,36 @@
   cursor: default;
 }
 
+/* code block horizontal scroll */
+.post-prose .overflow-x-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+.post-prose .overflow-x-auto::-webkit-scrollbar {
+  height: 5px;
+}
+.post-prose .overflow-x-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+.post-prose .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+.post-prose .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 /* ==== light theme overrides ==== */
+[data-theme='light'] .post-prose .overflow-x-auto {
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+[data-theme='light'] .post-prose .overflow-x-auto::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+}
+[data-theme='light'] .post-prose .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.32);
+}
+
 [data-theme='light'] .post-prose img {
   box-shadow: 0 2px 12px color-mix(in oklab, black 10%, transparent);
 }

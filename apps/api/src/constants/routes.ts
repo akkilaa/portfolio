@@ -47,6 +47,7 @@ export const AUTH_ROUTES = {
   VERIFY: '/verify',
   REFRESH: '/refresh',
   LOGOUT: '/logout',
+  ME: '/me',
   GITHUB: '/github',
   GITHUB_CALLBACK: '/github/callback',
   LINKEDIN: '/linkedin',

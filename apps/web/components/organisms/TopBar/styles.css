@@ -1,3 +1,6 @@
 .topbar {
   background: color-mix(in oklab, var(--bg) 75%, transparent);
+  will-change: transform;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
