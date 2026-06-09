@@ -1,4 +1,5 @@
 'use client'
+import './styles.css'
 import { useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'

@@ -2,6 +2,12 @@ import type { Metadata } from 'next'
 
 export const SITE_URL = process.env.NEXT_PUBLIC_API_URL_ORIGIN
 
+export const AVAILABILITY = {
+  open: true,
+  label: 'open to roles & freelance',
+  closedLabel: 'not taking on new work',
+}
+
 export const SITE_AUTHOR = {
   name: 'Aleksa Janjic',
   url: SITE_URL,

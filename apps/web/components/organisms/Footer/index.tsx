@@ -11,7 +11,10 @@ const Footer = () => {
     <footer className="relative z-[1] max-w-[1200px] mx-auto px-8 border-t border-[var(--border)] pt-8 pb-14 font-[family-name:var(--font-mono)] text-[12px] text-[var(--text-dim)] flex justify-between items-center gap-4 flex-wrap">
       <div>
         <span>© {year} akkila</span>
-        <span className="text-[var(--text-faint)]"> · built fullstack, deployed to a $5 VPS</span>
+        <span className="text-[var(--text-faint)]">
+          {' '}
+          · built fullstack, deployed from homelab, self-hosted
+        </span>
       </div>
       <div className="flex gap-5">
         <Link href="/rss.xml" className={footLink}>

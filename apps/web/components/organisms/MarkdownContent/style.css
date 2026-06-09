@@ -229,37 +229,6 @@
   color: #888;
 }
 
-/* lightbox */
-.lightbox-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: color-mix(in oklab, black 88%, transparent);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  cursor: zoom-out;
-  animation: lightbox-in 150ms ease;
-}
-
-@keyframes lightbox-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.lightbox-img {
-  object-fit: contain;
-  border-radius: 14px;
-  box-shadow: 0 32px 96px color-mix(in oklab, black 70%, transparent);
-  cursor: default;
-}
-
 /* code block horizontal scroll */
 .post-prose .overflow-x-auto {
   scrollbar-width: thin;

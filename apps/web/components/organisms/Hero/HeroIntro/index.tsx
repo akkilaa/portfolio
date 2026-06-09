@@ -7,14 +7,16 @@ import LinkedinIcon from '@/components/atoms/LinkedinIcon'
 import MailIcon from '@/components/atoms/MailIcon'
 import PageHeading from '@/components/organisms/PageHeading'
 import { countYearsUntilToday } from '@/utils/dateUtils'
-import { SITE_AUTHOR } from '@/lib/site'
+import { SITE_AUTHOR, AVAILABILITY } from '@/lib/site'
 
 const HeroIntro = () => (
   <div>
-    <div className="inline-flex items-center gap-2.5 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--text-dim)] py-1.5 px-3 border border-[var(--border)] rounded-full bg-[var(--surface)] mb-7 whitespace-nowrap">
-      <Blip />
-      <span>AVAILABLE · open to roles &amp; freelance</span>
-    </div>
+    {AVAILABILITY.open && (
+      <div className="inline-flex items-center gap-2.5 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--text-dim)] py-1.5 px-3 border border-[var(--border)] rounded-full bg-[var(--surface)] mb-7 whitespace-nowrap">
+        <Blip />
+        <span>AVAILABLE · {AVAILABILITY.label}</span>
+      </div>
+    )}
     <PageHeading
       leadingDollar
       title={
