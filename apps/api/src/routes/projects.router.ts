@@ -1,7 +1,11 @@
 import { Router } from 'express'
 import { PROJECT_ROUTES } from '@api/constants/routes'
 import { validate } from '@api/middlewares/validate'
-import { CreateProjectSchema, UpdateProjectSchema } from '@api/schemas/project.schema'
+import {
+  CreateProjectSchema,
+  UpdateProjectSchema,
+  ReorderProjectsSchema,
+} from '@api/schemas/project.schema'
 import type { ProjectsController } from '@api/controllers/projects.controller'
 
 export function createProjectsRouter(controller: ProjectsController): Router {
@@ -14,6 +18,7 @@ export function createProjectsRouter(controller: ProjectsController): Router {
   router.get(PROJECT_ROUTES.BY_SLUG, controller.getBySlug)
 
   router.post(PROJECT_ROUTES.ROOT, validate(CreateProjectSchema), controller.create)
+  router.patch(PROJECT_ROUTES.REORDER, validate(ReorderProjectsSchema), controller.reorder)
   router.patch(PROJECT_ROUTES.BY_ID, validate(UpdateProjectSchema), controller.update)
   router.patch(PROJECT_ROUTES.PUBLISH, controller.publish)
   router.patch(PROJECT_ROUTES.UNPUBLISH, controller.unpublish)

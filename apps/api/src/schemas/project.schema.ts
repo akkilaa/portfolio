@@ -33,5 +33,12 @@ export const UpdateProjectSchema = CreateProjectSchema.partial().extend({
   endedAt: z.iso.datetime().nullish(),
 })
 
+export const ReorderProjectsSchema = z.object({
+  orders: z
+    .array(z.object({ id: z.string().uuid(), displayOrder: z.number().int().min(0) }))
+    .min(1),
+})
+
 export type CreateProjectInput = z.infer<typeof CreateProjectSchema>
 export type UpdateProjectInput = z.infer<typeof UpdateProjectSchema>
+export type ReorderProjectsInput = z.infer<typeof ReorderProjectsSchema>

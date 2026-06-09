@@ -22,6 +22,7 @@ export const PROJECT_ROUTES = {
   ROOT: '/',
   FEATURED: '/featured',
   ADMIN: '/admin',
+  REORDER: '/reorder',
   BY_SLUG: '/:slug',
   BY_ID: '/:id',
   PUBLISH: '/:id/publish',

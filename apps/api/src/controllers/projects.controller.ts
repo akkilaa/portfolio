@@ -11,6 +11,7 @@ import type {
   ProjectListResponse,
   AdminProjectListResponse,
 } from '@portfolio/shared'
+import type { ReorderProjectsInput } from '@api/schemas/project.schema'
 import {
   serializeProject,
   serializeProjectDetail,
@@ -183,6 +184,19 @@ export class ProjectsController {
     try {
       const project = await this.service.unfeature(req.params.id)
       res.json(serializeProject(project))
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  reorder = async (
+    req: Request<AnyParams, void, ReorderProjectsInput>,
+    res: Response<void>,
+    next: NextFunction,
+  ) => {
+    try {
+      await this.service.reorder(req.body.orders)
+      res.status(204).send()
     } catch (err) {
       next(err)
     }

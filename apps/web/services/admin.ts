@@ -49,6 +49,16 @@ export async function adminUnfeatureProject(id: string): Promise<ProjectResponse
   return expect<ProjectResponse>(await api.patch(`/projects/${id}/unfeature`, {}))
 }
 
+export async function adminReorderProjects(
+  orders: { id: string; displayOrder: number }[],
+): Promise<void> {
+  const res = await api.patch('/projects/reorder', { orders })
+  if (!res.ok) {
+    const body = (await res.json().catch(() => ({}))) as { error?: string }
+    throw new Error(body.error ?? `Request failed: ${res.status}`)
+  }
+}
+
 export async function adminGetMe(): Promise<{ id: string; role: string }> {
   return expect<{ id: string; role: string }>(await api.get('/auth/me'))
 }

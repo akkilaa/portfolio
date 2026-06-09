@@ -56,4 +56,8 @@ export class ProjectsService {
   unfeature(id: string) {
     return this.projects.unfeature(id)
   }
+
+  reorder(orders: { id: string; displayOrder: number }[]) {
+    return this.projects.reorder(orders)
+  }
 }

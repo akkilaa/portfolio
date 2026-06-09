@@ -12,6 +12,7 @@ import {
   adminUnpublishProject,
   adminFeatureProject,
   adminUnfeatureProject,
+  adminReorderProjects,
   adminLogout,
 } from '@/services/admin'
 import { useSaveShortcut } from '@/hooks/useSaveShortcut'
@@ -100,6 +101,24 @@ const AdminProjectsShell = () => {
     }
   }
 
+  async function handleMove(id: string, direction: 'up' | 'down') {
+    const idx = projects.findIndex((p) => p.id === id)
+    if (idx < 0) return
+    const swapIdx = direction === 'up' ? idx - 1 : idx + 1
+    if (swapIdx < 0 || swapIdx >= projects.length) return
+
+    const reordered = [...projects]
+    ;[reordered[idx], reordered[swapIdx]] = [reordered[swapIdx], reordered[idx]]
+    const withOrder = reordered.map((p, i) => ({ ...p, displayOrder: i }))
+    setProjects(withOrder)
+
+    try {
+      await adminReorderProjects(withOrder.map((p) => ({ id: p.id, displayOrder: p.displayOrder })))
+    } catch {
+      setProjects(projects)
+    }
+  }
+
   async function handleToggleFeatured() {
     if (!selected) return
     try {
@@ -155,6 +174,8 @@ const AdminProjectsShell = () => {
           projects={projects}
           selectedId={selected?.id ?? null}
           onSelect={selectProject}
+          onMoveUp={(id) => handleMove(id, 'up')}
+          onMoveDown={(id) => handleMove(id, 'down')}
         />
 
         {editor && selected ? (

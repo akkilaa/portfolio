@@ -145,4 +145,12 @@ export class PrismaProjectRepository {
   unfeature(id: string): Promise<Project> {
     return this.db.project.update({ where: { id }, data: { featured: false } })
   }
+
+  async reorder(orders: { id: string; displayOrder: number }[]): Promise<void> {
+    await this.db.$transaction(
+      orders.map(({ id, displayOrder }) =>
+        this.db.project.update({ where: { id }, data: { displayOrder } }),
+      ),
+    )
+  }
 }

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { formatDate, type PostDetailResponse } from '@/services/posts'
 import Tag from '@/components/atoms/Tag'
 
@@ -38,8 +39,8 @@ const PostHeader = ({ post }: { post: PostDetailResponse }) => {
       </div>
 
       {post.coverImage && (
-        <div className="mt-8 rounded-xl overflow-hidden">
-          <img src={post.coverImage} alt={post.title} className="w-full h-auto block" />
+        <div className="mt-8 rounded-xl overflow-hidden relative w-full max-h-[60vh] aspect-video">
+          <Image src={post.coverImage} alt={post.title} fill className="object-cover" priority />
         </div>
       )}
     </header>

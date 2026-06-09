@@ -126,4 +126,27 @@ export class InMemoryProjectRepository implements IProjectRepository {
     this.store.set(id, updated)
     return updated
   }
+
+  async feature(id: string): Promise<Project> {
+    const existing = this.store.get(id)
+    if (!existing) throw new Error(`Project ${id} not found`)
+    const updated = { ...existing, featured: true, updatedAt: new Date() }
+    this.store.set(id, updated)
+    return updated
+  }
+
+  async unfeature(id: string): Promise<Project> {
+    const existing = this.store.get(id)
+    if (!existing) throw new Error(`Project ${id} not found`)
+    const updated = { ...existing, featured: false, updatedAt: new Date() }
+    this.store.set(id, updated)
+    return updated
+  }
+
+  async reorder(orders: { id: string; displayOrder: number }[]): Promise<void> {
+    for (const { id, displayOrder } of orders) {
+      const existing = this.store.get(id)
+      if (existing) this.store.set(id, { ...existing, displayOrder, updatedAt: new Date() })
+    }
+  }
 }

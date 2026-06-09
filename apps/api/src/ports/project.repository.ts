@@ -24,4 +24,5 @@ export interface IProjectRepository {
   unpublish(id: string): Promise<Project>
   feature(id: string): Promise<Project>
   unfeature(id: string): Promise<Project>
+  reorder(orders: { id: string; displayOrder: number }[]): Promise<void>
 }
