@@ -25,10 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <GoogleAnalytics />
       </head>
       <body>
         <ClarityScript />
-        <GoogleAnalytics />
         {children}
       </body>
     </html>
