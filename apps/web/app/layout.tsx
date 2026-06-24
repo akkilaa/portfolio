@@ -4,6 +4,7 @@ import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { SITE_META, personJsonLd } from '@/lib/site'
 import { ClarityScript } from '@/components/atoms/clarity'
+import { GoogleAnalytics } from '@/components/atoms/google-analytics'
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ClarityScript />
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
